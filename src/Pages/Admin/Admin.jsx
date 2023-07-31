@@ -1,29 +1,29 @@
-import React from 'react';
-import './Admin.css'
-import { Helmet, HelmetProvider } from 'react-helmet-async';
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import React, { useEffect } from "react";
+import "./Admin.css";
+import { Helmet, HelmetProvider } from "react-helmet-async";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import menuBar from "../../assets/images/menu-bar.png";
 import dashboard from "../../assets/images/dashboard.png";
-import dashboardBlue from "../../assets/images/dashboard-blue.png";
 import news from "../../assets/images/news.png";
-import newsBLue from "../../assets/images/news-blue.png";
 import stations from "../../assets/images/station.png";
-import stationBlue from "../../assets/images/station-blue.png";
-import devices from "../../assets/images/devices.png";
-import devicesBlue from "../../assets/images/devices-blue.png";
 import user from "../../assets/images/user.png";
-import userBlue from "../../assets/images/user-blue.png";
 import userLogout from "../../assets/images/user-logout.png";
 import logout from "../../assets/images/logout.png";
+import AdminUser from "../AdminUser/AdminUser";
+import AdminStation from "../AdminStation/AdminStation";
+import AdminDashboard from "../AdminDashboard/AdminDashboard";
+import AdminNews from "../AdminNews/AdminNews";
 
 const Admin = () => {
   const token = window.localStorage.getItem("accessToken");
   const location = useLocation();
   const navigate = useNavigate();
 
-  if (!token) {
-    window.location.href = "/";
-  }
+  useEffect(() => {
+    if (!token) {
+      window.location.href = "/";
+    }
+  }, []);
 
   function logoutFunction() {
     window.localStorage.removeItem("username");
@@ -204,14 +204,10 @@ const Admin = () => {
         <section className="home-section py-3">
           <div className="container-fluid">
             <Routes>
-              {/* <Route path="/" element={<AdminDashboard />} />
-              <Route path="/news" element={<AdminNew />} />
+              <Route path="/" element={<AdminDashboard />} />
               <Route path="/stations" element={<AdminStation />} />
-              <Route
-                path="/devices/notworking"
-                element={<AdminDevicesNotWorking />}
-              />
-              <Route path="/users" element={<AdminUser />} /> */}
+              <Route path="/news" element={<AdminNews />} />
+              <Route path="/users" element={<AdminUser />} />
             </Routes>
           </div>
         </section>

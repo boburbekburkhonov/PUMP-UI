@@ -12,7 +12,7 @@ const Login = () => {
       window.localStorage.getItem("username") &&
       window.localStorage.getItem("password")
     ) {
-      fetch(`${apiGlobal}/users/login`, {
+      fetch(`${apiGlobal}/auth/signIn`, {
         method: "post",
         headers: {
           "content-type": "application/json",
@@ -24,9 +24,14 @@ const Login = () => {
       })
         .then((res) => res.json())
         .then((data) => {
-          if (data.token) {
-            window.localStorage.setItem("accessToken", data.token);
-            window.location.href = "/admin";
+          if (data.statusCode == 200) {
+            window.localStorage.setItem("accessToken", data.data.accessToken);
+            window.localStorage.setItem("refreshToken", data.data.refreshToken);
+            if (data.data.user.role == "SUPERADMIN") {
+              window.location.href = "/admin";
+            } else if (data.data.user.role == "USER") {
+              window.location.href = "/user";
+            }
           }
         });
     }
@@ -36,7 +41,7 @@ const Login = () => {
     e.preventDefault();
     const { username, password } = e.target;
 
-    const request = await fetch(`${apiGlobal}/users/login`, {
+    const request = await fetch(`${apiGlobal}/auth/signIn`, {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -47,15 +52,20 @@ const Login = () => {
       }),
     });
 
-    const response = await request.json()
+    const response = await request.json();
 
-    if (response.token) {
+    if (response.statusCode == 200) {
       if (checkRemember == "on") {
         window.localStorage.setItem("username", username.value);
         window.localStorage.setItem("password", password.value);
       }
-      window.localStorage.setItem("accessToken", response.token);
-      window.location.href = "/admin";
+      window.localStorage.setItem("accessToken", response.data.accessToken);
+      window.localStorage.setItem("refreshToken", response.data.refreshToken);
+      if (response.data.user.role == "SUPERADMIN") {
+        window.location.href = "/admin";
+      } else if (response.data.user.role == "USER") {
+        window.location.href = "/user";
+      }
     } else {
       setError(true);
       setErrorMessage("Username yoki password noto'g'ri!");
