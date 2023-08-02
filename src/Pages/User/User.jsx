@@ -3,12 +3,15 @@ import "./User.css";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import menuBar from "../../assets/images/menu-bar.png";
-import dashboard from "../../assets/images/dashboard.png";
 import news from "../../assets/images/news.png";
 import stations from "../../assets/images/station.png";
-import user from "../../assets/images/user.png";
+import map from "../../assets/images/map.png";
 import userLogout from "../../assets/images/user-logout.png";
 import logout from "../../assets/images/logout.png";
+import UserNews from "../UserNews/UserNews";
+import UserMap from "../UserMap/UserMap";
+import UserStations from "../UserStations/UserStations";
+import { apiGlobal } from "../API/Api.global";
 
 const User = () => {
   const token = window.localStorage.getItem("accessToken");
@@ -47,25 +50,25 @@ const User = () => {
               <a
                 href="#"
                 className={
-                  location.pathname == "/admin"
+                  location.pathname == "/user"
                     ? "sidebar-active sidebar-style"
                     : "sidebar-style"
                 }
-                onClick={() => navigate("/admin")}
+                onClick={() => navigate("/user")}
               >
                 <img
                   className="bx bx-menu"
-                  src={dashboard}
+                  src={map}
                   alt="menuBar"
                   width={26}
                   height={26}
                 />
-                <span className="link_name ms-3">Dashboard</span>
+                <span className="link_name ms-3">Xarita</span>
               </a>
               <ul className="sub-menu blank">
                 <li>
                   <a className="link_name" href="#">
-                    Dashboard
+                    Xarita
                   </a>
                 </li>
               </ul>
@@ -75,11 +78,11 @@ const User = () => {
                 <a
                   href="#"
                   className={
-                    location.pathname == "/admin/news"
+                    location.pathname == "/user/news"
                       ? "sidebar-active sidebar-style"
                       : "sidebar-style"
                   }
-                  onClick={() => navigate("/admin/news")}
+                  onClick={() => navigate("/user/news")}
                 >
                   <img
                     className="bx bx-menu"
@@ -104,11 +107,11 @@ const User = () => {
                 <a
                   href="#"
                   className={
-                    location.pathname == "/admin/stations"
+                    location.pathname == "/user/stations"
                       ? "sidebar-active sidebar-style"
                       : "sidebar-style"
                   }
-                  onClick={() => navigate("/admin/stations")}
+                  onClick={() => navigate("/user/stations")}
                 >
                   <img
                     className="bx bx-menu"
@@ -124,33 +127,6 @@ const User = () => {
                 <li>
                   <a className="link_name" href="#">
                     Stansiyalar
-                  </a>
-                </li>
-              </ul>
-            </li>
-            <li className="mt-3">
-              <a
-                href="#"
-                className={
-                  location.pathname == "/admin/users"
-                    ? "sidebar-active sidebar-style"
-                    : "sidebar-style"
-                }
-                onClick={() => navigate("/admin/users")}
-              >
-                <img
-                  className="bx bx-menu"
-                  src={user}
-                  alt="menuBar"
-                  width={26}
-                  height={26}
-                />
-                <span className="link_name ms-3">Userlar</span>
-              </a>
-              <ul className="sub-menu blank">
-                <li>
-                  <a className="link_name" href="#">
-                    Userlar
                   </a>
                 </li>
               </ul>
@@ -200,14 +176,9 @@ const User = () => {
         <section className="home-section py-3">
           <div className="container-fluid">
             <Routes>
-              {/* <Route path="/" element={<AdminDashboard />} />
-              <Route path="/news" element={<AdminNew />} />
-              <Route path="/stations" element={<AdminStation />} />
-              <Route
-                path="/devices/notworking"
-                element={<AdminDevicesNotWorking />}
-              />
-              <Route path="/users" element={<AdminUser />} /> */}
+              <Route path="/" element={<UserMap />} />
+              <Route path="/news" element={<UserNews />} />
+              <Route path="/stations" element={<UserStations />} />
             </Routes>
           </div>
         </section>

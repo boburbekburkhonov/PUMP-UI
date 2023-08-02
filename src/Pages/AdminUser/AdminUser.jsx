@@ -14,6 +14,7 @@ const AdminUser = () => {
   const [roleOneWithId, setRoleOneWithId] = useState({});
   const [changeUserId, setChangeUserId] = useState();
   const [changeRoleId, setChangeRoleId] = useState();
+  const [changeRoleName, setChangeRoleName] = useState();
 
   useEffect(() => {
     fetch(`${apiGlobal}/roles/find-all`, {
@@ -169,28 +170,48 @@ const AdminUser = () => {
   const updateRole = (e) => {
     e.preventDefault();
 
-    const { roleUpdate } = e.target;
-    console.log(changeRoleId, roleUpdate.value);
-    // fetch(`${apiGlobal}/roles/update`, {
-    //   method: "POST",
-    //   headers: {
-    //     "content-type": "application/json",
-    //     Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
-    //   },
-    //   body: JSON.stringify({
-    //     id: changeRoleId,
-    //     name: roleUpdate.value,
-    //   }),
-    // })
-    //   .then((res) => res.json())
-    //   .then((data) => {
-    //     if (data.statusCode == 200) {
-    //       setCount(count + 1);
-    //       toast.success("Role muvaffaqqiyatli o'zgartirildi!");
-    //     }
-    //   });
+    const { roleName } = e.target;
 
-    // roleCreate.value = "";
+    fetch(`${apiGlobal}/roles/update`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+      },
+      body: JSON.stringify({
+        id: changeRoleId,
+        name: roleName.value,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.statusCode == 200) {
+          setCount(count + 1);
+          toast.success("Role muvaffaqqiyatli o'zgartirildi!");
+        }
+      });
+  };
+
+  // !USER DELETE
+  const deleteRole = () => {
+    fetch(`${apiGlobal}/roles/delete`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+      },
+      body: JSON.stringify({
+        id: changeRoleId,
+        name: changeRoleName,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.statusCode == 200) {
+          setCount(count + 1);
+          toast.error("Role muvaffaqqiyatli o'chirildi!");
+        }
+      });
   };
 
   //! ROLE WITH ID
@@ -445,6 +466,58 @@ const AdminUser = () => {
           </div>
         </div>
 
+        {/* MODAL ROLE PERMISSION   */}
+        <div
+          className="modal fade"
+          id="staticBackdropRole"
+          data-bs-backdrop="static"
+          data-bs-keyboard="false"
+          tabIndex="-1"
+          aria-labelledby="staticBackdropLabel"
+          aria-hidden="true"
+        >
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-header modal-header-permission border-bottom-0 bg-danger pt-4 pb-4 d-flex align-items-center">
+                <div className="d-flex align-items-center justify-content-center w-100">
+                  <p className="m-0 text-light fs-6 fw-bolder">
+                    Haqiqatan ham o'chirmoqchimisiz?
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  className="btn-close-location btn-close-delete-devices p-0"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <img src={close} alt="cancel" width="18" height="18" />
+                </button>
+              </div>
+              <div className="modal-body fw-semibold fs-5 text-dark text-center modal-delete-device">
+                O'ylab ko'ring! <span className="text-success"> role </span> ni
+                oʻchirish doimiy boʻladi.
+              </div>
+              <div className="modal-footer border-top-0">
+                <button
+                  type="button"
+                  className="btn btn-light"
+                  data-bs-dismiss="modal"
+                  onClick={deleteRole}
+                >
+                  Ha
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-light"
+                  data-bs-dismiss="modal"
+                >
+                  Yo'q
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* ToastContainer */}
         <ToastContainer
           position="top-center"
@@ -487,6 +560,16 @@ const AdminUser = () => {
                   data-bs-target="#profile-edit"
                 >
                   Role yaratish
+                </button>
+              </li>
+
+              <li className="nav-item">
+                <button
+                  className="nav-link"
+                  data-bs-toggle="tab"
+                  data-bs-target="#station-add"
+                >
+                  Stansiya biriktirish
                 </button>
               </li>
             </ul>
@@ -705,6 +788,7 @@ const AdminUser = () => {
                   </div>
                 </form>
               </div>
+
               <div
                 className="tab-pane fade profile-edit pt-3"
                 id="profile-edit"
@@ -779,7 +863,11 @@ const AdminUser = () => {
                               <button
                                 className="btn-devices-edit"
                                 data-bs-toggle="modal"
-                                data-bs-target="#staticBackdrop"
+                                data-bs-target="#staticBackdropRole"
+                                onClick={() => {
+                                  setChangeRoleName(e.name);
+                                  setChangeRoleId(e._id);
+                                }}
                               >
                                 <img
                                   src="https://cdn-icons-png.flaticon.com/128/9713/9713380.png"
@@ -794,6 +882,20 @@ const AdminUser = () => {
                       })}
                     </tbody>
                   </table>
+                </div>
+              </div>
+
+              <div className="tab-pane fade station-add pt-3" id="station-add">
+                <div className="d-flex align-items-start justify-content-between flex-wrap role-create-list-wrapper">
+                  <form
+                    className=" form-role-create-wrapper d-flex align-items-end"
+                    onSubmit={createRole}
+                  >
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Id,
+                    distinctio atque magnam mollitia iusto tenetur culpa rerum
+                    delectus esse quisquam, nam totam aliquid consectetur
+                    aperiam perspiciatis expedita. Quia, molestiae in.
+                  </form>
                 </div>
               </div>
             </div>

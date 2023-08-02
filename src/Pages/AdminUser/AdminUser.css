@@ -341,3 +341,7 @@ th {
   margin-top: 0 !important;
   max-width: 50vw;
 }
+
+.c-table__body {
+  background: rgb(246, 246, 246);
+}

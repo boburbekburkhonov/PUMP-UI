@@ -1,0 +1,51 @@
+.day-form {
+  padding: 15px 20px;
+  max-width: 670px;
+  width: 100%;
+  border: 2px solid #2a8f3b;
+  border-radius: 10px;
+}
+
+.filter-form {
+  padding: 15px 20px;
+  max-width: 900px;
+  width: 100%;
+  border: 2px solid #2a8f3b;
+  border-radius: 10px;
+}
+
+.month-form {
+  padding: 15px 20px;
+  max-width: 770px;
+  width: 100%;
+  border: 2px solid #2a8f3b;
+  border-radius: 10px;
+}
+
+.day-select-wrapper {
+  max-width: 300px;
+  width: 100%;
+}
+
+.day-select-label {
+  font-size: 18px;
+}
+
+@media (max-width: 780px) {
+
+  .day-form {
+    justify-content: center !important;
+  }
+
+  .day-select-wrapper {
+    max-width: 500px;
+  }
+
+  .day-btn-wrapper {
+    width: 100%;
+    margin-top: 20px !important;
+    display: flex;
+    justify-content: center !important;
+  }
+
+}
