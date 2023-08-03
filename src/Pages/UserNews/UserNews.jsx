@@ -2,18 +2,30 @@ import React, { useEffect, useState } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import "./UserNews.css";
 import { api, apiGlobal } from "../API/Api.global";
+import moment from "moment";
 
 const UserNews = () => {
   const [todayOrYesterday, setTodayOrYesterday] = useState("today");
-  const [monthOrYear, setmonthOrYear] = useState("day");
+  const [monthOrYear, setMonthOrYear] = useState("daily");
   const [allRegionsForToday, setAllRegionsForToday] = useState([]);
   const [allStationForToday, setAllStationForToday] = useState([]);
+  const [allRegionsForMonthOrYear, setAllRegionsForMonthOrYear] = useState([]);
+  const [allStationForMonthOrYear, setAllStationForMonthOrYear] = useState([]);
+  const [allRegionsForCustom, setAllRegionsForCustom] = useState([]);
+  const [allStationForCustom, setAllStationForCustom] = useState([]);
   const [todayOrYesterdayData, setTodayOrYesterdayData] = useState([]);
+  const [monthOrYearData, setMonthOrYearData] = useState([]);
+  const [customData, setCustomData] = useState([]);
+  const [stationNameForMonthOrYear, setStationNameForMonthOrYear] = useState(
+    []
+  );
   const [stationIdForTodayOrYesterday, setStationIdForTodayOrYesterday] =
     useState();
+  const [stationIdForMonthOrYear, setStationIdForMonthOrYear] = useState();
+  const [dataForMonthOrYear, setDataForMonthOrYear] = useState();
 
   useEffect(() => {
-    const fetchDataRegion = async () => {
+    const fetchDataDayOrYesterday = async () => {
       const requestRegionAll = await fetch(`${apiGlobal}/regions/all`, {
         method: "GET",
         headers: {
@@ -55,9 +67,68 @@ const UserNews = () => {
         .then((data) => setTodayOrYesterdayData(data.data));
     };
 
-    fetchDataRegion();
+    fetchDataDayOrYesterday();
+
+    const fetchDataMonthOrYear = async () => {
+      const requestRegionAll = await fetch(`${apiGlobal}/regions/all`, {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+        },
+      });
+      const responseRegionAll = await requestRegionAll.json();
+      setAllRegionsForMonthOrYear(responseRegionAll.regions);
+
+      const requestStationAll = await fetch(
+        `${apiGlobal}/stations/find-by-regionNumber?regionNumber=${responseRegionAll.regions[0]?.id}`,
+        {
+          method: "GET",
+          headers: {
+            "content-type": "application/json",
+            Authorization:
+              "Bearer " + window.localStorage.getItem("accessToken"),
+          },
+        }
+      );
+
+      const responseStationAll = await requestStationAll.json();
+      setAllStationForMonthOrYear(responseStationAll.data);
+    };
+
+    fetchDataMonthOrYear();
+
+    const fetchDataCustom = async () => {
+      const requestRegionAll = await fetch(`${apiGlobal}/regions/all`, {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+        },
+      });
+      const responseRegionAll = await requestRegionAll.json();
+      setAllRegionsForCustom(responseRegionAll.regions);
+
+      const requestStationAll = await fetch(
+        `${apiGlobal}/stations/find-by-regionNumber?regionNumber=${responseRegionAll.regions[0]?.id}`,
+        {
+          method: "GET",
+          headers: {
+            "content-type": "application/json",
+            Authorization:
+              "Bearer " + window.localStorage.getItem("accessToken"),
+          },
+        }
+      );
+
+      const responseStationAll = await requestStationAll.json();
+      setAllStationForCustom(responseStationAll.data);
+    };
+
+    fetchDataCustom();
   }, []);
 
+  // ! DAY OR YESTERDAY
   const getDataTodayOrYesterday = (value) => {
     if (value == "today") {
       fetch(`${api}/data/today?stationsId=${stationIdForTodayOrYesterday}`, {
@@ -161,6 +232,152 @@ const UserNews = () => {
           setTodayOrYesterdayData(data.data);
         });
     }
+  };
+
+  // ! MONTH OR YEAR
+  const getStationByRegionIdForMonthOrYear = (regionId) => {
+    fetch(
+      `${apiGlobal}/stations/find-by-regionNumber?regionNumber=${regionId}`,
+      {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+        },
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => setAllStationForMonthOrYear(data.data));
+  };
+
+  const getMonthDataMonthOrYear = (e) => {
+    e.preventDefault();
+
+    const { stationMonth, dateMonth } = e.target;
+
+    const foundStationName = allStationForMonthOrYear.find(
+      (e) => e._id == stationMonth.value
+    );
+
+    setStationNameForMonthOrYear(foundStationName.name);
+    setStationIdForMonthOrYear(stationMonth.value);
+    setDataForMonthOrYear(dateMonth.value);
+
+    if (monthOrYear == "daily") {
+      fetch(
+        `${api}/data/day?stationsId=${stationMonth.value}&date=${dateMonth.value}`,
+        {
+          method: "GET",
+          headers: {
+            "content-type": "application/json",
+            Authorization:
+              "Bearer " + window.localStorage.getItem("accessToken"),
+          },
+        }
+      )
+        .then((res) => res.json())
+        .then((data) => setMonthOrYearData(data.data));
+    } else if (monthOrYear == "month") {
+      fetch(
+        `${api}/data/month?stationsId=${
+          stationMonth.value
+        }&month=${dateMonth.value.slice(0, 7)}`,
+        {
+          method: "GET",
+          headers: {
+            "content-type": "application/json",
+            Authorization:
+              "Bearer " + window.localStorage.getItem("accessToken"),
+          },
+        }
+      )
+        .then((res) => res.json())
+        .then((data) => setMonthOrYearData(data.data));
+    } else if (monthOrYear == "year") {
+      fetch(
+        `${api}/data/year?stationsId=${
+          stationMonth.value
+        }&year=${dateMonth.value.slice(0, 4)}`,
+        {
+          method: "GET",
+          headers: {
+            "content-type": "application/json",
+            Authorization:
+              "Bearer " + window.localStorage.getItem("accessToken"),
+          },
+        }
+      )
+        .then((res) => res.json())
+        .then((data) => setMonthOrYearData(data.data));
+    }
+  };
+
+  const getDataMonthOrYear = (value) => {
+    if (value == "daily") {
+      fetch(
+        `${api}/data/day?stationsId=${stationIdForMonthOrYear}&date=${dataForMonthOrYear}`,
+        {
+          method: "GET",
+          headers: {
+            "content-type": "application/json",
+            Authorization:
+              "Bearer " + window.localStorage.getItem("accessToken"),
+          },
+        }
+      )
+        .then((res) => res.json())
+        .then((data) => setMonthOrYearData(data.data));
+    } else if (value == "month") {
+      fetch(
+        `${api}/data/month?stationsId=${stationIdForMonthOrYear}&month=${dataForMonthOrYear?.slice(
+          0,
+          7
+        )}`,
+        {
+          method: "GET",
+          headers: {
+            "content-type": "application/json",
+            Authorization:
+              "Bearer " + window.localStorage.getItem("accessToken"),
+          },
+        }
+      )
+        .then((res) => res.json())
+        .then((data) => setMonthOrYearData(data.data));
+    } else if (value == "year") {
+      fetch(
+        `${api}/data/year?stationsId=${stationIdForMonthOrYear}&year=${dataForMonthOrYear?.slice(
+          0,
+          4
+        )}`,
+        {
+          method: "GET",
+          headers: {
+            "content-type": "application/json",
+            Authorization:
+              "Bearer " + window.localStorage.getItem("accessToken"),
+          },
+        }
+      )
+        .then((res) => res.json())
+        .then((data) => setMonthOrYearData(data.data));
+    }
+  };
+
+  // ! CUSTOM
+  const getStationByRegionIdForCustom = (regionId) => {
+    fetch(
+      `${apiGlobal}/stations/find-by-regionNumber?regionNumber=${regionId}`,
+      {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+        },
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => setAllStationForCustom(data.data));
   };
 
   return (
@@ -282,54 +499,68 @@ const UserNews = () => {
                 </div>
 
                 <div>
-                  <table className="c-table mt-4">
-                    <thead className="c-table__header">
-                      <tr>
-                        <th className="c-table__col-label text-center">Nomi</th>
-                        <th className="c-table__col-label text-center">
-                          Jami oqim
-                        </th>
-                        <th className="c-table__col-label text-center">
-                          Ijobiy oqim
-                        </th>
-                        <th className="c-table__col-label text-center">
-                          Oqim darajasi
-                        </th>
-                        <th className="c-table__col-label text-center">
-                          Tezlik
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="c-table__body">
-                      {todayOrYesterdayData?.map((e, i) => {
-                        return (
-                          <tr className="fs-6 column-admin-station" key={i}>
-                            <td className="c-table__cell text-center">
-                              {
-                                allStationForToday?.find((s) => {
-                                  if (s._id == e.stationId) {
-                                    return s.name;
-                                  }
-                                })?.name
-                              }
-                            </td>
-                            <td className="c-table__cell text-center">
-                              {e.totalsFlow}
-                            </td>
-                            <td className="c-table__cell text-center">
-                              {e.positiveFlow}
-                            </td>
-                            <td className="c-table__cell text-center">
-                              {e.flowRate}
-                            </td>
-                            <td className="c-table__cell text-center">
-                              {e.velocity}
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
+                  {todayOrYesterdayData?.length > 0 ? (
+                    <table className="c-table mt-4">
+                      <thead className="c-table__header">
+                        <tr>
+                          <th className="c-table__col-label text-center">
+                            Nomi
+                          </th>
+                          <th className="c-table__col-label text-center">
+                            Jami oqim
+                          </th>
+                          <th className="c-table__col-label text-center">
+                            Ijobiy oqim
+                          </th>
+                          <th className="c-table__col-label text-center">
+                            Oqim darajasi
+                          </th>
+                          <th className="c-table__col-label text-center">
+                            Tezlik
+                          </th>
+                          <th className="c-table__col-label text-center">
+                            Sana
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="c-table__body">
+                        {todayOrYesterdayData?.map((e, i) => {
+                          return (
+                            <tr className="fs-6 column-admin-station" key={i}>
+                              <td className="c-table__cell text-center">
+                                {
+                                  allStationForToday?.find((s) => {
+                                    if (s._id == e.stationId) {
+                                      return s.name;
+                                    }
+                                  })?.name
+                                }
+                              </td>
+                              <td className="c-table__cell text-center">
+                                {e.totalsFlow}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                {e.positiveFlow}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                {e.flowRate}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                {e.velocity}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                {`${e.date.split("T")[1].split(".")[0]}`}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  ) : (
+                    <div className="alert alert-success fw-semibold mt-3 text-center fs-5">
+                      Hozircha ma'lumot kelmadi...
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -338,7 +569,7 @@ const UserNews = () => {
                 id="profile-overview"
               >
                 <h3 className="m-0">
-                  {monthOrYear == "day"
+                  {monthOrYear == "daily"
                     ? "Kunlik ma'lumotlar"
                     : monthOrYear == "month"
                     ? "Oylik ma'lumotlar"
@@ -348,7 +579,10 @@ const UserNews = () => {
                 </h3>
 
                 <div className="d-flex  justify-content-between flex-wrap mt-3">
-                  <form className="month-form d-flex align-items-end justify-content-between flex-wrap">
+                  <form
+                    onSubmit={getMonthDataMonthOrYear}
+                    className="month-form d-flex align-items-end justify-content-between flex-wrap"
+                  >
                     <div className="day-select-wrapper-month">
                       <label
                         htmlFor="regionMonth"
@@ -361,37 +595,40 @@ const UserNews = () => {
                         name="region"
                         id="regionMonth"
                         required
+                        onChange={(e) =>
+                          getStationByRegionIdForMonthOrYear(e.target.value)
+                        }
                       >
-                        {/* {allRegions?.map((e, i) => {
+                        {allRegionsForMonthOrYear?.map((e, i) => {
                           return (
-                            <option value={e._id} key={i}>
+                            <option value={e.id} key={i}>
                               {e.name}
                             </option>
                           );
-                        })} */}
+                        })}
                       </select>
                     </div>
 
                     <div className="day-select-wrapper-month">
                       <label
-                        htmlFor="regionMonth"
+                        htmlFor="stationMonth"
                         className="text-success day-select-label fw-semibold mb-2"
                       >
                         Stansiya
                       </label>
                       <select
                         className="form-select"
-                        name="region"
-                        id="regionMonth"
+                        name="stationMonth"
+                        id="stationMonth"
                         required
                       >
-                        {/* {allStation?.map((e, i) => {
+                        {allStationForMonthOrYear?.map((e, i) => {
                           return (
                             <option value={e._id} key={i}>
                               {e.name}
                             </option>
                           );
-                        })} */}
+                        })}
                       </select>
                     </div>
 
@@ -416,25 +653,99 @@ const UserNews = () => {
                   <div className="day-btn-wrapper mt-2">
                     <button
                       className="btn btn-success"
-                      onClick={() => setmonthOrYear("day")}
+                      onClick={() => {
+                        setMonthOrYear("daily");
+                        getDataMonthOrYear("daily");
+                      }}
                     >
                       Kunlik
                     </button>
 
                     <button
                       className="btn btn-success ms-3"
-                      onClick={() => setmonthOrYear("month")}
+                      onClick={() => {
+                        setMonthOrYear("month");
+                        getDataMonthOrYear("month");
+                      }}
                     >
                       Oylik
                     </button>
 
                     <button
                       className="btn btn-success ms-3"
-                      onClick={() => setmonthOrYear("year")}
+                      onClick={() => {
+                        setMonthOrYear("year");
+                        getDataMonthOrYear("year");
+                      }}
                     >
                       Yillik
                     </button>
                   </div>
+                </div>
+
+                <div>
+                  {monthOrYearData?.length > 0 ? (
+                    <table className="c-table mt-4">
+                      <thead className="c-table__header">
+                        <tr>
+                          <th className="c-table__col-label text-center">
+                            Nomi
+                          </th>
+                          <th className="c-table__col-label text-center">
+                            Jami oqim
+                          </th>
+                          <th className="c-table__col-label text-center">
+                            Ijobiy oqim
+                          </th>
+                          <th className="c-table__col-label text-center">
+                            Oqim darajasi
+                          </th>
+                          <th className="c-table__col-label text-center">
+                            Tezlik
+                          </th>
+                          <th className="c-table__col-label text-center">
+                            Sana
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="c-table__body">
+                        {monthOrYearData?.map((e, i) => {
+                          return (
+                            <tr className="fs-6 column-admin-station" key={i}>
+                              <td className="c-table__cell text-center">
+                                {stationNameForMonthOrYear}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                {e.totalsFlow}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                {e.positiveFlow}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                {e.flowRate}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                {e.velocity}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                {monthOrYear == "daily"
+                                  ? `${e?.date?.split("T")[1]?.split(".")[0]}`
+                                  : monthOrYear == "month"
+                                  ? e.day
+                                  : monthOrYear == "year"
+                                  ? e.day
+                                  : null}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  ) : (
+                    <div className="alert alert-success fw-semibold mt-3 text-center fs-5">
+                      Hozircha ma'lumot kelmadi...
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -459,14 +770,17 @@ const UserNews = () => {
                           name="region"
                           id="regionMonth"
                           required
+                          onChange={(e) =>
+                            getStationByRegionIdForCustom(e.target.value)
+                          }
                         >
-                          {/* {allRegions?.map((e, i) => {
+                          {allRegionsForCustom?.map((e, i) => {
                             return (
-                              <option value={e._id} key={i}>
+                              <option value={e.id} key={i}>
                                 {e.name}
                               </option>
                             );
-                          })} */}
+                          })}
                         </select>
                       </div>
 
@@ -483,13 +797,13 @@ const UserNews = () => {
                           id="regionMonth"
                           required
                         >
-                          {/* {allStation?.map((e, i) => {
+                          {allStationForCustom?.map((e, i) => {
                             return (
                               <option value={e._id} key={i}>
                                 {e.name}
                               </option>
                             );
-                          })} */}
+                          })}
                         </select>
                       </div>
 
