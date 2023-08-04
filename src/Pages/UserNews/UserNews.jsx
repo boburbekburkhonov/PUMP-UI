@@ -19,6 +19,9 @@ const UserNews = () => {
   const [stationNameForMonthOrYear, setStationNameForMonthOrYear] = useState(
     []
   );
+  const [stationNameForCustom, setStationNameForCustom] = useState("");
+  const [stationNameForTodayOrYesterday, setStationNameForTodayOrYesterday] =
+    useState("");
   const [stationIdForTodayOrYesterday, setStationIdForTodayOrYesterday] =
     useState();
   const [stationIdForMonthOrYear, setStationIdForMonthOrYear] = useState();
@@ -51,6 +54,7 @@ const UserNews = () => {
       const responseStationAll = await requestStationAll.json();
       setAllStationForToday(responseStationAll.data);
       setStationIdForTodayOrYesterday(responseStationAll?.data[0]?._id);
+      setStationNameForTodayOrYesterday(responseStationAll?.data[0].name);
 
       fetch(
         `${api}/data/today?stationsId=${responseStationAll?.data[0]?._id}`,
@@ -172,6 +176,7 @@ const UserNews = () => {
     const responseStationAll = await requestStationAll.json();
     setAllStationForToday(responseStationAll.data);
     setStationIdForTodayOrYesterday(responseStationAll?.data[0]?._id);
+    setStationNameForTodayOrYesterday(responseStationAll?.data[0]?.name);
 
     if (todayOrYesterday == "today") {
       fetch(
@@ -205,6 +210,10 @@ const UserNews = () => {
   };
 
   const searchDataByStationId = async (stationId) => {
+    const foundStationName = allStationForToday.find((e) => e._id == stationId);
+
+    setStationNameForTodayOrYesterday(foundStationName.name);
+
     if (todayOrYesterday == "today") {
       fetch(`${api}/data/today?stationsId=${stationId}`, {
         method: "GET",
@@ -380,6 +389,31 @@ const UserNews = () => {
       .then((data) => setAllStationForCustom(data.data));
   };
 
+  const searchDataByStationIdAndDataForCustom = (e) => {
+    e.preventDefault();
+
+    const { stationCustom, dateStart, dateEnd } = e.target;
+
+    const foundStationName = allStationForCustom.find(
+      (e) => e._id == stationCustom.value
+    );
+
+    setStationNameForCustom(foundStationName.name);
+
+    fetch(
+      `${api}/data/custom?stationsId=${stationCustom.value}&startDate=${dateStart.value}&endDate=${dateEnd.value}`,
+      {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+        },
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => setCustomData(data.data));
+  };
+
   return (
     <HelmetProvider>
       <div>
@@ -528,13 +562,7 @@ const UserNews = () => {
                           return (
                             <tr className="fs-6 column-admin-station" key={i}>
                               <td className="c-table__cell text-center">
-                                {
-                                  allStationForToday?.find((s) => {
-                                    if (s._id == e.stationId) {
-                                      return s.name;
-                                    }
-                                  })?.name
-                                }
+                                {stationNameForTodayOrYesterday}
                               </td>
                               <td className="c-table__cell text-center">
                                 {e.totalsFlow}
@@ -743,7 +771,7 @@ const UserNews = () => {
                     </table>
                   ) : (
                     <div className="alert alert-success fw-semibold mt-3 text-center fs-5">
-                      Hozircha ma'lumot kelmadi...
+                      Hozircha ma'lumot yo'q...
                     </div>
                   )}
                 </div>
@@ -757,18 +785,21 @@ const UserNews = () => {
                   <h3 className="m-0">Qidirish</h3>
 
                   <div className="d-flex  justify-content-between flex-wrap mt-3">
-                    <form className="filter-form d-flex align-items-end justify-content-between flex-wrap">
+                    <form
+                      className="filter-form d-flex align-items-end justify-content-between flex-wrap"
+                      onSubmit={searchDataByStationIdAndDataForCustom}
+                    >
                       <div className="day-select-wrapper-month">
                         <label
-                          htmlFor="regionMonth"
+                          htmlFor="regionCustom"
                           className="text-success day-select-label fw-semibold mb-2"
                         >
                           Viloyat
                         </label>
                         <select
                           className="form-select"
-                          name="region"
-                          id="regionMonth"
+                          name="regionCustom"
+                          id="regionCustom"
                           required
                           onChange={(e) =>
                             getStationByRegionIdForCustom(e.target.value)
@@ -786,15 +817,15 @@ const UserNews = () => {
 
                       <div className="day-select-wrapper-month">
                         <label
-                          htmlFor="regionMonth"
+                          htmlFor="stationCustom"
                           className="text-success day-select-label fw-semibold mb-2"
                         >
                           Stansiya
                         </label>
                         <select
                           className="form-select"
-                          name="region"
-                          id="regionMonth"
+                          name="stationCustom"
+                          id="stationCustom"
                           required
                         >
                           {allStationForCustom?.map((e, i) => {
@@ -809,7 +840,7 @@ const UserNews = () => {
 
                       <div className="day-select-wrapper-month">
                         <label
-                          htmlFor="dateMonth"
+                          htmlFor="dateStart"
                           className="text-success day-select-label fw-semibold mb-2"
                         >
                           Boshlanish sana
@@ -817,14 +848,15 @@ const UserNews = () => {
                         <input
                           type="date"
                           className="form-control"
-                          id="dateMonth"
+                          id="dateStart"
+                          name="dateStart"
                           required
                         />
                       </div>
 
                       <div className="day-select-wrapper-month">
                         <label
-                          htmlFor="dateMonth"
+                          htmlFor="dateEnd"
                           className="text-success day-select-label fw-semibold mb-2"
                         >
                           Tugash sana
@@ -832,7 +864,8 @@ const UserNews = () => {
                         <input
                           type="date"
                           className="form-control"
-                          id="dateMonth"
+                          id="dateEnd"
+                          name="dateEnd"
                           required
                         />
                       </div>
@@ -840,6 +873,68 @@ const UserNews = () => {
                       <button className="btn btn-success mt-2">Qidirish</button>
                     </form>
                   </div>
+                </div>
+
+                <div>
+                  {customData?.length > 0 ? (
+                    <table className="c-table mt-4">
+                      <thead className="c-table__header">
+                        <tr>
+                          <th className="c-table__col-label text-center">
+                            Nomi
+                          </th>
+                          <th className="c-table__col-label text-center">
+                            Jami oqim
+                          </th>
+                          <th className="c-table__col-label text-center">
+                            Ijobiy oqim
+                          </th>
+                          <th className="c-table__col-label text-center">
+                            Oqim darajasi
+                          </th>
+                          <th className="c-table__col-label text-center">
+                            Tezlik
+                          </th>
+                          <th className="c-table__col-label text-center">
+                            Sana
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="c-table__body">
+                        {customData?.map((e, i) => {
+                          return (
+                            <tr className="fs-6 column-admin-station" key={i}>
+                              <td className="c-table__cell text-center">
+                                {stationNameForCustom}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                {e.totalsFlow}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                {e.positiveFlow}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                {e.flowRate}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                {e.velocity}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                {`${e.date.split("-")[1]}/${e.date
+                                  .split("-")[2]
+                                  .slice(0, 2)}/${e.date.split("-")[0]}`}{" "}
+                                {`${e.date.split("T")[1].split(".")[0]}`}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  ) : (
+                    <div className="alert alert-success fw-semibold mt-3 text-center fs-5">
+                      Hozircha ma'lumot yo'q...
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
