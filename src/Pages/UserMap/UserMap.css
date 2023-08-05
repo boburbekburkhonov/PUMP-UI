@@ -1,3 +1,17 @@
 .map-container {
   height: 90vh !important;
 }
+
+.gm-style-iw {
+  width: 100%;
+}
+
+.infowindow-desc {
+  font-size: 16px;
+}
+
+.infowindow-span {
+  font-size: 15px;
+  font-weight: 600;
+  color: #488dfc;
+}
