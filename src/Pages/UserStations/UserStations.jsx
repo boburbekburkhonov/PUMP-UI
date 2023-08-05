@@ -60,6 +60,7 @@ const UserStations = () => {
       <div>
         <div className="card">
           <div className="card-body pt-3">
+            <h3>Stansiyalar</h3>
             {userStation?.length > 0 ? (
               <table className="c-table mt-4">
                 <thead className="c-table__header">
@@ -95,7 +96,7 @@ const UserStations = () => {
                               if (r.id == e.region_id) {
                                 return r;
                               }
-                            }).name
+                            })?.name
                           }
                         </td>
                         <td className="c-table__cell text-center">
@@ -104,7 +105,7 @@ const UserStations = () => {
                               if (d.id == e.district_id) {
                                 return d;
                               }
-                            }).name
+                            })?.name
                           }
                         </td>
                         <td className="c-table__cell text-center">
@@ -113,7 +114,7 @@ const UserStations = () => {
                               if (b.id == e.balance_organization_id) {
                                 return b;
                               }
-                            }).name
+                            })?.name
                           }
                         </td>
                         <td className="c-table__cell text-center">

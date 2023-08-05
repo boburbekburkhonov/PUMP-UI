@@ -538,22 +538,19 @@ const UserNews = () => {
                       <thead className="c-table__header">
                         <tr>
                           <th className="c-table__col-label text-center">
-                            Nomi
-                          </th>
-                          <th className="c-table__col-label text-center">
                             Jami oqim
                           </th>
                           <th className="c-table__col-label text-center">
-                            Ijobiy oqim
+                            Musbat oqim
                           </th>
                           <th className="c-table__col-label text-center">
-                            Oqim darajasi
+                            Oqim tezligi
                           </th>
                           <th className="c-table__col-label text-center">
                             Tezlik
                           </th>
                           <th className="c-table__col-label text-center">
-                            Sana
+                            Soat
                           </th>
                         </tr>
                       </thead>
@@ -561,9 +558,6 @@ const UserNews = () => {
                         {todayOrYesterdayData?.map((e, i) => {
                           return (
                             <tr className="fs-6 column-admin-station" key={i}>
-                              <td className="c-table__cell text-center">
-                                {stationNameForTodayOrYesterday}
-                              </td>
                               <td className="c-table__cell text-center">
                                 {e.totalsFlow}
                               </td>
@@ -717,16 +711,13 @@ const UserNews = () => {
                       <thead className="c-table__header">
                         <tr>
                           <th className="c-table__col-label text-center">
-                            Nomi
-                          </th>
-                          <th className="c-table__col-label text-center">
                             Jami oqim
                           </th>
                           <th className="c-table__col-label text-center">
-                            Ijobiy oqim
+                            Musbat oqim
                           </th>
                           <th className="c-table__col-label text-center">
-                            Oqim darajasi
+                            Oqim tezligi
                           </th>
                           <th className="c-table__col-label text-center">
                             Tezlik
@@ -740,9 +731,6 @@ const UserNews = () => {
                         {monthOrYearData?.map((e, i) => {
                           return (
                             <tr className="fs-6 column-admin-station" key={i}>
-                              <td className="c-table__cell text-center">
-                                {stationNameForMonthOrYear}
-                              </td>
                               <td className="c-table__cell text-center">
                                 {e.totalsFlow}
                               </td>
@@ -881,16 +869,13 @@ const UserNews = () => {
                       <thead className="c-table__header">
                         <tr>
                           <th className="c-table__col-label text-center">
-                            Nomi
-                          </th>
-                          <th className="c-table__col-label text-center">
                             Jami oqim
                           </th>
                           <th className="c-table__col-label text-center">
-                            Ijobiy oqim
+                            Musbat oqim
                           </th>
                           <th className="c-table__col-label text-center">
-                            Oqim darajasi
+                            Oqim tezligi
                           </th>
                           <th className="c-table__col-label text-center">
                             Tezlik
@@ -904,9 +889,6 @@ const UserNews = () => {
                         {customData?.map((e, i) => {
                           return (
                             <tr className="fs-6 column-admin-station" key={i}>
-                              <td className="c-table__cell text-center">
-                                {stationNameForCustom}
-                              </td>
                               <td className="c-table__cell text-center">
                                 {e.totalsFlow}
                               </td>
