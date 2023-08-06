@@ -300,24 +300,27 @@ const AdminStation = () => {
       )
         .then((res) => res.json())
         .then((data) => {
-          setTotalPages(0);
           setAllStation(data.data);
         });
-    } else if (nameOrImeiSelect.value == "imei") {
-      fetch(`${apiGlobal}/stations/searchImel?imel=${nameOrImeiInput.value}`, {
-        method: "GET",
-        headers: {
-          "content-type": "application/json",
-          Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
-        },
-      })
+    } else if (nameOrImeiSelect.value == "topic") {
+      fetch(
+        `${apiGlobal}/stations/find-by-topic?topic=${nameOrImeiInput.value}`,
+        {
+          method: "GET",
+          headers: {
+            "content-type": "application/json",
+            Authorization:
+              "Bearer " + window.localStorage.getItem("accessToken"),
+          },
+        }
+      )
         .then((res) => res.json())
         .then((data) => {
-          setTotalPages(0);
-          setAllStation(data.data);
+          console.log(data);
+          setAllStation([data.data]);
         });
     } else if (nameOrImeiSelect.value == "all") {
-      fetch(`${apiGlobal}/stations/all?page=1&perPage=10`, {
+      fetch(`${apiGlobal}/stations/find-all`, {
         method: "GET",
         headers: {
           "content-type": "application/json",
@@ -326,7 +329,6 @@ const AdminStation = () => {
       })
         .then((res) => res.json())
         .then((data) => {
-          setTotalPages(data.metadata.lastPage);
           setAllStation(data.data);
         });
     }
@@ -937,14 +939,14 @@ const AdminStation = () => {
                     required
                   >
                     <option value="name">Nomi</option>
-                    <option value="imei">Imei</option>
+                    <option value="topic">Topic</option>
                     <option value="all">All</option>
                   </select>
 
                   <button className="btn btn-success">Qidirish</button>
                 </form>
 
-                {allStation?.length == 0 ? (
+                {allStation?.length == 0 || allStation.includes(undefined) ? (
                   <h3 className="alert alert-dark text-center mt-5">
                     Hozircha bunday stansiya yo'q...
                   </h3>
@@ -986,19 +988,19 @@ const AdminStation = () => {
                             }}
                           >
                             <td className="c-table__cell text-center">
-                              {e.name}
+                              {e?.name}
                             </td>
                             <td className="c-table__cell text-center">
-                              {e.topic}
+                              {e?.topic}
                             </td>
                             <td className="c-table__cell text-center">
-                              {e.status}
+                              {e?.status}
                             </td>
                             <td className="c-table__cell text-center">
-                              {e.location}
+                              {e?.location}
                             </td>
                             <td className="c-table__cell text-center">
-                              {e.devicePhoneNum}
+                              {e?.devicePhoneNum}
                             </td>
                             <td className="c-table__cell text-center">
                               <button

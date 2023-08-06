@@ -5,10 +5,13 @@ import "react-toastify/dist/ReactToastify.css";
 import "./AdminUser.css";
 import { apiGlobal } from "../API/Api.global";
 import close from "../../assets/images/close.png";
+import attach from "../../assets/images/attach.png";
 
 const AdminUser = () => {
   const [role, setRole] = useState([]);
   const [users, setUsers] = useState([]);
+  const [allStations, setAllStations] = useState([]);
+  let [stationIndexForAttach, setStationIndexForAttach] = useState([]);
   const [count, setCount] = useState(0);
   const [userOneWithId, setUserOneWithId] = useState({});
   const [roleOneWithId, setRoleOneWithId] = useState({});
@@ -40,6 +43,20 @@ const AdminUser = () => {
       .then((data) => {
         if (data.statusCode == 200) {
           setUsers(data.data);
+        }
+      });
+
+    fetch(`${apiGlobal}/stations/find-all`, {
+      method: "GET",
+      headers: {
+        "content-type": "application/json",
+        Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.statusCode == 200) {
+          setAllStations(data.data);
         }
       });
   }, [count]);
@@ -220,6 +237,34 @@ const AdminUser = () => {
     setRoleOneWithId(foundRole);
   };
 
+  const attachStation = (e) => {
+    e.preventDefault();
+
+    const { attachStationValue } = e.target;
+    let stationIdList = [];
+    stationIndexForAttach.forEach((e) => {
+      stationIdList.push(attachStationValue[e].value);
+    });
+    console.log(changeUserId, stationIdList);
+
+    fetch(`${apiGlobal}/user-join-stations/create`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+      },
+      body: JSON.stringify({
+        userId: changeUserId,
+        stationsIdList: stationIdList,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.statusCode == 200) {
+          window.location.reload();
+        }
+      });
+  };
   return (
     <HelmetProvider>
       <div>
@@ -513,6 +558,82 @@ const AdminUser = () => {
                 >
                   Yo'q
                 </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Modal USER ATTACH STATION */}
+        <div
+          className="modal fade"
+          id="exampleModalAttach"
+          tabIndex="-1"
+          data-bs-backdrop="static"
+          aria-labelledby="exampleModalAttach"
+          aria-hidden="true"
+        >
+          <div className="modal-dialog table-attach-width modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h1
+                  className="modal-title text-primary fs-5"
+                  id="exampleModalLabel"
+                >
+                  Userga stansiya biriktirish
+                </h1>
+                <button
+                  type="button"
+                  className="btn-close btn-close-location"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div className="modal-body ">
+                <div className="d-flex justify-content-between">
+                  <div>
+                    <h4>Stansiyalar</h4>
+                    <form onSubmit={attachStation}>
+                      {allStations?.map((e, i) => {
+                        return (
+                          <div
+                            key={i}
+                            className="df-flex align-items-center mb-3"
+                          >
+                            <input
+                              className="attach-input"
+                              type="checkbox"
+                              id={e._id}
+                              name="attachStationValue"
+                              value={e._id}
+                              onChange={() => {
+                                if (!stationIndexForAttach.includes(i)) {
+                                  stationIndexForAttach.push(i);
+                                } else if (stationIndexForAttach.includes(i)) {
+                                  stationIndexForAttach =
+                                    stationIndexForAttach?.filter(
+                                      (e) => e != i
+                                    );
+                                }
+                                setStationIndexForAttach(stationIndexForAttach);
+                              }}
+                            />
+                            <label className="attach-label" htmlFor={e._id}>
+                              {e.name}
+                            </label>
+                          </div>
+                        );
+                      })}
+
+                      <button className="btn btn-success">Biriktirish</button>
+                    </form>
+                  </div>
+
+                  <span className="user-station-frame"></span>
+
+                  <div>
+                    <h4>Foydalanuvchiga tegishli stansiyalar</h4>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -887,15 +1008,66 @@ const AdminUser = () => {
 
               <div className="tab-pane fade station-add pt-3" id="station-add">
                 <div className="d-flex align-items-start justify-content-between flex-wrap role-create-list-wrapper">
-                  <form
-                    className=" form-role-create-wrapper d-flex align-items-end"
-                    onSubmit={createRole}
-                  >
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Id,
-                    distinctio atque magnam mollitia iusto tenetur culpa rerum
-                    delectus esse quisquam, nam totam aliquid consectetur
-                    aperiam perspiciatis expedita. Quia, molestiae in.
-                  </form>
+                  <table className="c-table mt-4">
+                    <thead className="c-table__header">
+                      <tr>
+                        <th className="c-table__col-label text-center">Ism</th>
+                        <th className="c-table__col-label text-center">
+                          Familiya
+                        </th>
+                        <th className="c-table__col-label text-center">
+                          Username
+                        </th>
+                        <th className="c-table__col-label text-center">
+                          Telefon raqam
+                        </th>
+                        <th className="c-table__col-label text-center">Role</th>
+                        <th className="c-table__col-label text-center">
+                          Biriktirish
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="c-table__body">
+                      {users?.map((e, i) => {
+                        return (
+                          <tr className="fs-6" key={i}>
+                            <td className="c-table__cell text-center">
+                              {e.firstName}
+                            </td>
+                            <td className="c-table__cell text-center">
+                              {e.lastName}
+                            </td>
+                            <td className="c-table__cell text-center">
+                              {e.username}
+                            </td>
+                            <td className="c-table__cell text-center">
+                              {e.phoneNumber}
+                            </td>
+                            <td className="c-table__cell text-center">
+                              {e.role}
+                            </td>
+                            <td className="c-table__cell text-center">
+                              <button
+                                className="btn-devices-edit"
+                                data-bs-toggle="modal"
+                                data-bs-target="#exampleModalAttach"
+                                onClick={() => {
+                                  setChangeUserId(e._id);
+                                }}
+                              >
+                                <img
+                                  src={attach}
+                                  alt="update"
+                                  width="20"
+                                  height="20"
+                                />
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>

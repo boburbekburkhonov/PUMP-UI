@@ -2,26 +2,16 @@ import React, { useEffect, useState } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import "./UserNews.css";
 import { api, apiGlobal } from "../API/Api.global";
-import moment from "moment";
 
 const UserNews = () => {
   const [todayOrYesterday, setTodayOrYesterday] = useState("today");
   const [monthOrYear, setMonthOrYear] = useState("daily");
-  const [allRegionsForToday, setAllRegionsForToday] = useState([]);
   const [allStationForToday, setAllStationForToday] = useState([]);
-  const [allRegionsForMonthOrYear, setAllRegionsForMonthOrYear] = useState([]);
   const [allStationForMonthOrYear, setAllStationForMonthOrYear] = useState([]);
-  const [allRegionsForCustom, setAllRegionsForCustom] = useState([]);
   const [allStationForCustom, setAllStationForCustom] = useState([]);
   const [todayOrYesterdayData, setTodayOrYesterdayData] = useState([]);
   const [monthOrYearData, setMonthOrYearData] = useState([]);
   const [customData, setCustomData] = useState([]);
-  const [stationNameForMonthOrYear, setStationNameForMonthOrYear] = useState(
-    []
-  );
-  const [stationNameForCustom, setStationNameForCustom] = useState("");
-  const [stationNameForTodayOrYesterday, setStationNameForTodayOrYesterday] =
-    useState("");
   const [stationIdForTodayOrYesterday, setStationIdForTodayOrYesterday] =
     useState();
   const [stationIdForMonthOrYear, setStationIdForMonthOrYear] = useState();
@@ -29,44 +19,26 @@ const UserNews = () => {
 
   useEffect(() => {
     const fetchDataDayOrYesterday = async () => {
-      const requestRegionAll = await fetch(`${apiGlobal}/regions/all`, {
+      const requestStation = await fetch(`${apiGlobal}/last-data/get-all`, {
         method: "GET",
         headers: {
           "content-type": "application/json",
           Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
         },
       });
-      const responseRegionAll = await requestRegionAll.json();
-      setAllRegionsForToday(responseRegionAll.regions);
 
-      const requestStationAll = await fetch(
-        `${apiGlobal}/stations/find-by-regionNumber?regionNumber=${responseRegionAll.regions[0]?.id}`,
-        {
-          method: "GET",
-          headers: {
-            "content-type": "application/json",
-            Authorization:
-              "Bearer " + window.localStorage.getItem("accessToken"),
-          },
-        }
-      );
+      const responseStation = await requestStation.json();
 
-      const responseStationAll = await requestStationAll.json();
-      setAllStationForToday(responseStationAll.data);
-      setStationIdForTodayOrYesterday(responseStationAll?.data[0]?._id);
-      setStationNameForTodayOrYesterday(responseStationAll?.data[0].name);
+      setAllStationForToday(responseStation.data);
+      setStationIdForTodayOrYesterday(responseStation.data[0]?._id);
 
-      fetch(
-        `${api}/data/today?stationsId=${responseStationAll?.data[0]?._id}`,
-        {
-          method: "GET",
-          headers: {
-            "content-type": "application/json",
-            Authorization:
-              "Bearer " + window.localStorage.getItem("accessToken"),
-          },
-        }
-      )
+      fetch(`${api}/data/today?stationsId=${responseStation.data[0]?._id}`, {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+        },
+      })
         .then((res) => res.json())
         .then((data) => setTodayOrYesterdayData(data.data));
     };
@@ -74,59 +46,33 @@ const UserNews = () => {
     fetchDataDayOrYesterday();
 
     const fetchDataMonthOrYear = async () => {
-      const requestRegionAll = await fetch(`${apiGlobal}/regions/all`, {
+      const requestStation = await fetch(`${apiGlobal}/last-data/get-all`, {
         method: "GET",
         headers: {
           "content-type": "application/json",
           Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
         },
       });
-      const responseRegionAll = await requestRegionAll.json();
-      setAllRegionsForMonthOrYear(responseRegionAll.regions);
 
-      const requestStationAll = await fetch(
-        `${apiGlobal}/stations/find-by-regionNumber?regionNumber=${responseRegionAll.regions[0]?.id}`,
-        {
-          method: "GET",
-          headers: {
-            "content-type": "application/json",
-            Authorization:
-              "Bearer " + window.localStorage.getItem("accessToken"),
-          },
-        }
-      );
+      const responseStation = await requestStation.json();
 
-      const responseStationAll = await requestStationAll.json();
-      setAllStationForMonthOrYear(responseStationAll.data);
+      setAllStationForMonthOrYear(responseStation.data);
     };
 
     fetchDataMonthOrYear();
 
     const fetchDataCustom = async () => {
-      const requestRegionAll = await fetch(`${apiGlobal}/regions/all`, {
+      const requestStation = await fetch(`${apiGlobal}/last-data/get-all`, {
         method: "GET",
         headers: {
           "content-type": "application/json",
           Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
         },
       });
-      const responseRegionAll = await requestRegionAll.json();
-      setAllRegionsForCustom(responseRegionAll.regions);
 
-      const requestStationAll = await fetch(
-        `${apiGlobal}/stations/find-by-regionNumber?regionNumber=${responseRegionAll.regions[0]?.id}`,
-        {
-          method: "GET",
-          headers: {
-            "content-type": "application/json",
-            Authorization:
-              "Bearer " + window.localStorage.getItem("accessToken"),
-          },
-        }
-      );
+      const responseStation = await requestStation.json();
 
-      const responseStationAll = await requestStationAll.json();
-      setAllStationForCustom(responseStationAll.data);
+      setAllStationForCustom(responseStation.data);
     };
 
     fetchDataCustom();
@@ -161,59 +107,7 @@ const UserNews = () => {
     }
   };
 
-  const searchDataByRegionId = async (regionId) => {
-    const requestStationAll = await fetch(
-      `${apiGlobal}/stations/find-by-regionNumber?regionNumber=${regionId}`,
-      {
-        method: "GET",
-        headers: {
-          "content-type": "application/json",
-          Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
-        },
-      }
-    );
-
-    const responseStationAll = await requestStationAll.json();
-    setAllStationForToday(responseStationAll.data);
-    setStationIdForTodayOrYesterday(responseStationAll?.data[0]?._id);
-    setStationNameForTodayOrYesterday(responseStationAll?.data[0]?.name);
-
-    if (todayOrYesterday == "today") {
-      fetch(
-        `${api}/data/today?stationsId=${responseStationAll?.data[0]?._id}`,
-        {
-          method: "GET",
-          headers: {
-            "content-type": "application/json",
-            Authorization:
-              "Bearer " + window.localStorage.getItem("accessToken"),
-          },
-        }
-      )
-        .then((res) => res.json())
-        .then((data) => setTodayOrYesterdayData(data.data));
-    } else if (todayOrYesterday == "yesterday") {
-      fetch(
-        `${api}/data/yesterday?stationsId=${responseStationAll?.data[0]?._id}`,
-        {
-          method: "GET",
-          headers: {
-            "content-type": "application/json",
-            Authorization:
-              "Bearer " + window.localStorage.getItem("accessToken"),
-          },
-        }
-      )
-        .then((res) => res.json())
-        .then((data) => setTodayOrYesterdayData(data.data));
-    }
-  };
-
   const searchDataByStationId = async (stationId) => {
-    const foundStationName = allStationForToday.find((e) => e._id == stationId);
-
-    setStationNameForTodayOrYesterday(foundStationName.name);
-
     if (todayOrYesterday == "today") {
       fetch(`${api}/data/today?stationsId=${stationId}`, {
         method: "GET",
@@ -244,31 +138,11 @@ const UserNews = () => {
   };
 
   // ! MONTH OR YEAR
-  const getStationByRegionIdForMonthOrYear = (regionId) => {
-    fetch(
-      `${apiGlobal}/stations/find-by-regionNumber?regionNumber=${regionId}`,
-      {
-        method: "GET",
-        headers: {
-          "content-type": "application/json",
-          Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
-        },
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => setAllStationForMonthOrYear(data.data));
-  };
-
   const getMonthDataMonthOrYear = (e) => {
     e.preventDefault();
 
     const { stationMonth, dateMonth } = e.target;
 
-    const foundStationName = allStationForMonthOrYear.find(
-      (e) => e._id == stationMonth.value
-    );
-
-    setStationNameForMonthOrYear(foundStationName.name);
     setStationIdForMonthOrYear(stationMonth.value);
     setDataForMonthOrYear(dateMonth.value);
 
@@ -374,31 +248,10 @@ const UserNews = () => {
   };
 
   // ! CUSTOM
-  const getStationByRegionIdForCustom = (regionId) => {
-    fetch(
-      `${apiGlobal}/stations/find-by-regionNumber?regionNumber=${regionId}`,
-      {
-        method: "GET",
-        headers: {
-          "content-type": "application/json",
-          Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
-        },
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => setAllStationForCustom(data.data));
-  };
-
   const searchDataByStationIdAndDataForCustom = (e) => {
     e.preventDefault();
 
     const { stationCustom, dateStart, dateEnd } = e.target;
-
-    const foundStationName = allStationForCustom.find(
-      (e) => e._id == stationCustom.value
-    );
-
-    setStationNameForCustom(foundStationName.name);
 
     fetch(
       `${api}/data/custom?stationsId=${stationCustom.value}&startDate=${dateStart.value}&endDate=${dateEnd.value}`,
@@ -464,28 +317,6 @@ const UserNews = () => {
                 </h3>
                 <div className="d-flex  justify-content-between flex-wrap mt-3">
                   <form className="day-form d-flex align-items-center justify-content-between flex-wrap">
-                    <div className="day-select-wrapper">
-                      <label
-                        htmlFor="region"
-                        className="text-success day-select-label fw-semibold mb-2"
-                      >
-                        Viloyat
-                      </label>
-                      <select
-                        className="form-select"
-                        required
-                        onChange={(e) => searchDataByRegionId(e.target.value)}
-                      >
-                        {allRegionsForToday?.map((e, i) => {
-                          return (
-                            <option value={e.id} key={i}>
-                              {e.name}
-                            </option>
-                          );
-                        })}
-                      </select>
-                    </div>
-
                     <div className="day-select-wrapper">
                       <label
                         htmlFor="station"
@@ -605,32 +436,6 @@ const UserNews = () => {
                     onSubmit={getMonthDataMonthOrYear}
                     className="month-form d-flex align-items-end justify-content-between flex-wrap"
                   >
-                    <div className="day-select-wrapper-month">
-                      <label
-                        htmlFor="regionMonth"
-                        className="text-success day-select-label fw-semibold mb-2"
-                      >
-                        Viloyat
-                      </label>
-                      <select
-                        className="form-select"
-                        name="region"
-                        id="regionMonth"
-                        required
-                        onChange={(e) =>
-                          getStationByRegionIdForMonthOrYear(e.target.value)
-                        }
-                      >
-                        {allRegionsForMonthOrYear?.map((e, i) => {
-                          return (
-                            <option value={e.id} key={i}>
-                              {e.name}
-                            </option>
-                          );
-                        })}
-                      </select>
-                    </div>
-
                     <div className="day-select-wrapper-month">
                       <label
                         htmlFor="stationMonth"
@@ -777,32 +582,6 @@ const UserNews = () => {
                       className="filter-form d-flex align-items-end justify-content-between flex-wrap"
                       onSubmit={searchDataByStationIdAndDataForCustom}
                     >
-                      <div className="day-select-wrapper-month">
-                        <label
-                          htmlFor="regionCustom"
-                          className="text-success day-select-label fw-semibold mb-2"
-                        >
-                          Viloyat
-                        </label>
-                        <select
-                          className="form-select"
-                          name="regionCustom"
-                          id="regionCustom"
-                          required
-                          onChange={(e) =>
-                            getStationByRegionIdForCustom(e.target.value)
-                          }
-                        >
-                          {allRegionsForCustom?.map((e, i) => {
-                            return (
-                              <option value={e.id} key={i}>
-                                {e.name}
-                              </option>
-                            );
-                          })}
-                        </select>
-                      </div>
-
                       <div className="day-select-wrapper-month">
                         <label
                           htmlFor="stationCustom"
