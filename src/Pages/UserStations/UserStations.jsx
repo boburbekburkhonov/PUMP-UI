@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { apiGlobal } from "../API/Api.global";
+import { api } from "../API/Api.global";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 
 const UserStations = () => {
@@ -10,7 +10,7 @@ const UserStations = () => {
 
   useEffect(() => {
     const getUserStation = async () => {
-      const request = await fetch(`${apiGlobal}/last-data/get-all`, {
+      const request = await fetch(`${api}/last-data/get-all`, {
         method: "GET",
         headers: {
           "content-type": "application/json",
@@ -24,7 +24,7 @@ const UserStations = () => {
 
     getUserStation();
 
-    fetch(`${apiGlobal}/regions/all`, {
+    fetch(`${api}/regions/all`, {
       method: "GET",
       headers: {
         "content-type": "application/json",
@@ -34,7 +34,7 @@ const UserStations = () => {
       .then((res) => res.json())
       .then((data) => setAllRegion(data.regions));
 
-    fetch(`${apiGlobal}/districts/all`, {
+    fetch(`${api}/districts/all`, {
       method: "GET",
       headers: {
         "content-type": "application/json",
@@ -44,7 +44,7 @@ const UserStations = () => {
       .then((res) => res.json())
       .then((data) => setAllDistrict(data.districts));
 
-    fetch(`${apiGlobal}/balance-organizations/all-find`, {
+    fetch(`${api}/balance-organizations/all-find`, {
       method: "GET",
       headers: {
         "content-type": "application/json",

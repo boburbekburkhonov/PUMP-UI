@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { apiGlobal } from '../API/Api.global';
-import './Login.css'
+import { api } from "../API/Api.global";
+import "./Login.css";
 
 const Login = () => {
   const [errorMessage, setErrorMessage] = useState("");
@@ -12,7 +12,7 @@ const Login = () => {
       window.localStorage.getItem("username") &&
       window.localStorage.getItem("password")
     ) {
-      fetch(`${apiGlobal}/auth/signIn`, {
+      fetch(`${api}/auth/signIn`, {
         method: "post",
         headers: {
           "content-type": "application/json",
@@ -41,7 +41,7 @@ const Login = () => {
     e.preventDefault();
     const { username, password } = e.target;
 
-    const request = await fetch(`${apiGlobal}/auth/signIn`, {
+    const request = await fetch(`${api}/auth/signIn`, {
       method: "POST",
       headers: {
         "content-type": "application/json",

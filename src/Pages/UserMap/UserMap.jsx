@@ -8,7 +8,7 @@ import {
   InfoWindowF,
 } from "@react-google-maps/api";
 import "./UserMap.css";
-import { apiGlobal } from "../API/Api.global";
+import { api } from "../API/Api.global";
 import circleBlue from "../../assets/images/record.png";
 
 export default function Home() {
@@ -24,7 +24,7 @@ export default function Home() {
   );
 
   useEffect(() => {
-    fetch(`${apiGlobal}/last-data/get-all`, {
+    fetch(`${api}/last-data/get-all`, {
       method: "GET",
       headers: {
         "content-type": "application/json",

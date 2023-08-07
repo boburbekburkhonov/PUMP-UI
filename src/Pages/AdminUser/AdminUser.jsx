@@ -3,7 +3,7 @@ import { Helmet, HelmetProvider } from "react-helmet-async";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./AdminUser.css";
-import { apiGlobal } from "../API/Api.global";
+import { api } from "../API/Api.global";
 import close from "../../assets/images/close.png";
 import attach from "../../assets/images/attach.png";
 
@@ -20,7 +20,7 @@ const AdminUser = () => {
   const [changeRoleName, setChangeRoleName] = useState();
 
   useEffect(() => {
-    fetch(`${apiGlobal}/roles/find-all`, {
+    fetch(`${api}/roles/find-all`, {
       method: "GET",
       headers: {
         "content-type": "application/json",
@@ -32,7 +32,7 @@ const AdminUser = () => {
   }, [count]);
 
   useEffect(() => {
-    fetch(`${apiGlobal}/users/get-all`, {
+    fetch(`${api}/users/get-all`, {
       method: "GET",
       headers: {
         "content-type": "application/json",
@@ -46,7 +46,7 @@ const AdminUser = () => {
         }
       });
 
-    fetch(`${apiGlobal}/stations/find-all`, {
+    fetch(`${api}/stations/find-all`, {
       method: "GET",
       headers: {
         "content-type": "application/json",
@@ -67,7 +67,7 @@ const AdminUser = () => {
 
     const { name, lastName, phoneNumber, username, password, role } = e.target;
 
-    fetch(`${apiGlobal}/users/create`, {
+    fetch(`${api}/users/create`, {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -105,7 +105,7 @@ const AdminUser = () => {
     const { nameDevice, lastname, username, phoneNumberUpdate, roleUpdate } =
       e.target;
 
-    fetch(`${apiGlobal}/users/update`, {
+    fetch(`${api}/users/update`, {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -131,7 +131,7 @@ const AdminUser = () => {
 
   // !USER DELETE
   const deleteUser = () => {
-    fetch(`${apiGlobal}/users/delete`, {
+    fetch(`${api}/users/delete`, {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -162,7 +162,7 @@ const AdminUser = () => {
 
     const { roleCreate } = e.target;
 
-    fetch(`${apiGlobal}/roles/create`, {
+    fetch(`${api}/roles/create`, {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -189,7 +189,7 @@ const AdminUser = () => {
 
     const { roleName } = e.target;
 
-    fetch(`${apiGlobal}/roles/update`, {
+    fetch(`${api}/roles/update`, {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -211,7 +211,7 @@ const AdminUser = () => {
 
   // !USER DELETE
   const deleteRole = () => {
-    fetch(`${apiGlobal}/roles/delete`, {
+    fetch(`${api}/roles/delete`, {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -247,7 +247,7 @@ const AdminUser = () => {
     });
     console.log(changeUserId, stationIdList);
 
-    fetch(`${apiGlobal}/user-join-stations/create`, {
+    fetch(`${api}/user-join-stations/create`, {
       method: "POST",
       headers: {
         "content-type": "application/json",

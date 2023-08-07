@@ -11,7 +11,6 @@ import logout from "../../assets/images/logout.png";
 import UserNews from "../UserNews/UserNews";
 import UserMap from "../UserMap/UserMap";
 import UserStations from "../UserStations/UserStations";
-import { apiGlobal } from "../API/Api.global";
 
 const User = () => {
   const token = window.localStorage.getItem("accessToken");

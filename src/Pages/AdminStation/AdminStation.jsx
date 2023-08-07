@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { apiGlobal } from "../API/Api.global";
+import { api } from "../API/Api.global";
 import "./AdminStation.css";
 import circle from "../../assets/images/circle.png";
 import "react-toastify/dist/ReactToastify.css";
@@ -23,7 +23,7 @@ const AdminStation = () => {
   const [selectedfile, SetSelectedFile] = useState("");
 
   useEffect(() => {
-    fetch(`${apiGlobal}/stations/find-all`, {
+    fetch(`${api}/stations/find-all`, {
       method: "GET",
       headers: {
         "content-type": "application/json",
@@ -35,7 +35,7 @@ const AdminStation = () => {
         setAllStation(data.data);
       });
 
-    fetch(`${apiGlobal}/districts/all`, {
+    fetch(`${api}/districts/all`, {
       method: "GET",
       headers: {
         "content-type": "application/json",
@@ -47,7 +47,7 @@ const AdminStation = () => {
         setAllDistrict(data.districts);
       });
 
-    fetch(`${apiGlobal}/balance-organizations/all-find`, {
+    fetch(`${api}/balance-organizations/all-find`, {
       method: "GET",
       headers: {
         "content-type": "application/json",
@@ -60,7 +60,7 @@ const AdminStation = () => {
 
   useEffect(() => {
     const fetchDataRegion = async () => {
-      const requestRegionAll = await fetch(`${apiGlobal}/regions/all`, {
+      const requestRegionAll = await fetch(`${api}/regions/all`, {
         method: "GET",
         headers: {
           "content-type": "application/json",
@@ -71,7 +71,7 @@ const AdminStation = () => {
       setAllRegions(responseRegionAll.regions);
 
       const request = await fetch(
-        `${apiGlobal}/balance-organizations/getByRegionNumber?regionNumber=${responseRegionAll.regions[0].id}`,
+        `${api}/balance-organizations/getByRegionNumber?regionNumber=${responseRegionAll.regions[0].id}`,
         {
           method: "GET",
           headers: {
@@ -86,7 +86,7 @@ const AdminStation = () => {
       setallBalansOrgByRegionIdByRegionId(response.balanceOrganization);
 
       fetch(
-        `${apiGlobal}/stations/find-by-balanceOrganizationId?balanceOrganizationId=${response.balanceOrganization[0].id}`,
+        `${api}/stations/find-by-balanceOrganizationId?balanceOrganizationId=${response.balanceOrganization[0].id}`,
         {
           method: "GET",
           headers: {
@@ -107,7 +107,7 @@ const AdminStation = () => {
 
   const getStationWithId = async (id) => {
     const requestStationOne = await fetch(
-      `${apiGlobal}/stations/find-one?id=${id}`,
+      `${api}/stations/find-one?id=${id}`,
       {
         method: "GET",
         headers: {
@@ -122,7 +122,7 @@ const AdminStation = () => {
 
     // REGION NAME
     const requestRegionName = await fetch(
-      `${apiGlobal}/regions/getById?id=${responseStationOne?.data?.region_id}`,
+      `${api}/regions/getById?id=${responseStationOne?.data?.region_id}`,
       {
         method: "GET",
         headers: {
@@ -160,7 +160,7 @@ const AdminStation = () => {
       integration,
     } = e.target;
 
-    fetch(`${apiGlobal}/stations/create`, {
+    fetch(`${api}/stations/create`, {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -204,7 +204,7 @@ const AdminStation = () => {
 
     formData.append("file", excelFile.files[0]);
 
-    fetch(`${apiGlobal}/stations/create/upload`, {
+    fetch(`${api}/stations/create/upload`, {
       method: "POST",
       headers: {
         Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
@@ -236,7 +236,7 @@ const AdminStation = () => {
       integration,
     } = e.target;
 
-    fetch(`${apiGlobal}/stations/update`, {
+    fetch(`${api}/stations/update`, {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -263,7 +263,7 @@ const AdminStation = () => {
   };
 
   const deleteStation = () => {
-    fetch(`${apiGlobal}/stations/delete`, {
+    fetch(`${api}/stations/delete`, {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -288,7 +288,7 @@ const AdminStation = () => {
 
     if (nameOrImeiSelect.value == "name") {
       fetch(
-        `${apiGlobal}/stations/searchByName?name=${nameOrImeiInput.value}`,
+        `${api}/stations/searchByName?name=${nameOrImeiInput.value}`,
         {
           method: "GET",
           headers: {
@@ -304,7 +304,7 @@ const AdminStation = () => {
         });
     } else if (nameOrImeiSelect.value == "topic") {
       fetch(
-        `${apiGlobal}/stations/find-by-topic?topic=${nameOrImeiInput.value}`,
+        `${api}/stations/find-by-topic?topic=${nameOrImeiInput.value}`,
         {
           method: "GET",
           headers: {
@@ -320,7 +320,7 @@ const AdminStation = () => {
           setAllStation([data.data]);
         });
     } else if (nameOrImeiSelect.value == "all") {
-      fetch(`${apiGlobal}/stations/find-all`, {
+      fetch(`${api}/stations/find-all`, {
         method: "GET",
         headers: {
           "content-type": "application/json",
@@ -338,7 +338,7 @@ const AdminStation = () => {
     setallBalansOrgByRegionIdByRegionId([]);
 
     const request = await fetch(
-      `${apiGlobal}/balance-organizations/getByRegionNumber?regionNumber=${id}`,
+      `${api}/balance-organizations/getByRegionNumber?regionNumber=${id}`,
       {
         method: "GET",
         headers: {
@@ -352,7 +352,7 @@ const AdminStation = () => {
     setallBalansOrgByRegionIdByRegionId(response.balanceOrganization);
 
     fetch(
-      `${apiGlobal}/stations/find-by-balanceOrganizationId?balanceOrganizationId=${response.balanceOrganization[0]?.id}`,
+      `${api}/stations/find-by-balanceOrganizationId?balanceOrganizationId=${response.balanceOrganization[0]?.id}`,
       {
         method: "GET",
         headers: {
@@ -369,7 +369,7 @@ const AdminStation = () => {
 
   const searchStationByBalansOrg = (id) => {
     fetch(
-      `${apiGlobal}/stations/find-by-balanceOrganizationId?balanceOrganizationId=${id}`,
+      `${api}/stations/find-by-balanceOrganizationId?balanceOrganizationId=${id}`,
       {
         method: "GET",
         headers: {

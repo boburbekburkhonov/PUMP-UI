@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import "./UserNews.css";
-import { api, apiGlobal } from "../API/Api.global";
+import { api } from "../API/Api.global";
+import moment from "moment";
+import "moment/dist/locale/uz-latn";
+
+moment.locale("uz-latn");
 
 const UserNews = () => {
   const [todayOrYesterday, setTodayOrYesterday] = useState("today");
@@ -19,7 +23,7 @@ const UserNews = () => {
 
   useEffect(() => {
     const fetchDataDayOrYesterday = async () => {
-      const requestStation = await fetch(`${apiGlobal}/last-data/get-all`, {
+      const requestStation = await fetch(`${api}/last-data/get-all`, {
         method: "GET",
         headers: {
           "content-type": "application/json",
@@ -46,7 +50,7 @@ const UserNews = () => {
     fetchDataDayOrYesterday();
 
     const fetchDataMonthOrYear = async () => {
-      const requestStation = await fetch(`${apiGlobal}/last-data/get-all`, {
+      const requestStation = await fetch(`${api}/last-data/get-all`, {
         method: "GET",
         headers: {
           "content-type": "application/json",
@@ -62,7 +66,7 @@ const UserNews = () => {
     fetchDataMonthOrYear();
 
     const fetchDataCustom = async () => {
-      const requestStation = await fetch(`${apiGlobal}/last-data/get-all`, {
+      const requestStation = await fetch(`${api}/last-data/get-all`, {
         method: "GET",
         headers: {
           "content-type": "application/json",
@@ -343,7 +347,11 @@ const UserNews = () => {
 
                   <div className="day-btn-wrapper mt-2">
                     <button
-                      className="btn btn-success"
+                      className={
+                        todayOrYesterday == "today"
+                          ? "btn btn-secondary"
+                          : "btn btn-success"
+                      }
                       onClick={() => {
                         setTodayOrYesterday("today");
                         getDataTodayOrYesterday("today");
@@ -352,7 +360,11 @@ const UserNews = () => {
                       Bugungi
                     </button>
                     <button
-                      className="btn btn-success ms-3"
+                      className={
+                        todayOrYesterday == "yesterday"
+                          ? "btn btn-secondary ms-3"
+                          : "btn btn-success ms-3"
+                      }
                       onClick={() => {
                         setTodayOrYesterday("yesterday");
                         getDataTodayOrYesterday("yesterday");
@@ -479,7 +491,11 @@ const UserNews = () => {
 
                   <div className="day-btn-wrapper mt-2">
                     <button
-                      className="btn btn-success"
+                      className={
+                        monthOrYear == "daily"
+                          ? "btn btn-secondary"
+                          : "btn btn-success"
+                      }
                       onClick={() => {
                         setMonthOrYear("daily");
                         getDataMonthOrYear("daily");
@@ -489,7 +505,11 @@ const UserNews = () => {
                     </button>
 
                     <button
-                      className="btn btn-success ms-3"
+                      className={
+                        monthOrYear == "month"
+                          ? "btn btn-secondary ms-3"
+                          : "btn btn-success ms-3"
+                      }
                       onClick={() => {
                         setMonthOrYear("month");
                         getDataMonthOrYear("month");
@@ -499,7 +519,11 @@ const UserNews = () => {
                     </button>
 
                     <button
-                      className="btn btn-success ms-3"
+                      className={
+                        monthOrYear == "year"
+                          ? "btn btn-secondary ms-3"
+                          : "btn btn-success ms-3"
+                      }
                       onClick={() => {
                         setMonthOrYear("year");
                         getDataMonthOrYear("year");
@@ -528,7 +552,7 @@ const UserNews = () => {
                             Tezlik
                           </th>
                           <th className="c-table__col-label text-center">
-                            Sana
+                            {monthOrYear == "year" ? "Oy" : "Sana"}
                           </th>
                         </tr>
                       </thead>
@@ -554,7 +578,7 @@ const UserNews = () => {
                                   : monthOrYear == "month"
                                   ? e.day
                                   : monthOrYear == "year"
-                                  ? e.day
+                                  ? moment(e.day).format("LL").split(" ")[1]
                                   : null}
                               </td>
                             </tr>
