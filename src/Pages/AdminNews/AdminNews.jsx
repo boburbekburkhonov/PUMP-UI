@@ -378,16 +378,16 @@ const AdminNews = () => {
                       <thead className="c-table__header">
                         <tr>
                           <th className="c-table__col-label text-center">
-                            Jami oqim
+                            Jami oqim m3
                           </th>
                           <th className="c-table__col-label text-center">
-                            Musbat oqim
+                            Musbat oqim m3
                           </th>
                           <th className="c-table__col-label text-center">
-                            Oqim tezligi
+                            Oqim tezligi m3/s
                           </th>
                           <th className="c-table__col-label text-center">
-                            Tezlik
+                            Tezlik m/s
                           </th>
                           <th className="c-table__col-label text-center">
                             Soat

@@ -1,8 +1,16 @@
 .map-container {
   height: 90vh !important;
+  width: 80% !important;
+}
+
+.map-station-wrapper-list {
+  width: 20%;
+  height: 90vh !important;
+  overflow: auto;
 }
 
 .gm-style-iw {
+  max-width: 280px !important;
   width: 100%;
 }
 
@@ -17,5 +25,9 @@
 }
 
 .infowindow-desc-not-last-data {
-  font-size: 19px;
+  font-size: 17px !important;
+}
+
+.list-group-item {
+  cursor: pointer;
 }

@@ -3,6 +3,7 @@ import { Helmet, HelmetProvider } from "react-helmet-async";
 import "./UserNews.css";
 import { api } from "../API/Api.global";
 import moment from "moment";
+import * as XLSX from "xlsx";
 import "moment/dist/locale/uz-latn";
 
 moment.locale("uz-latn");
@@ -271,6 +272,32 @@ const UserNews = () => {
       .then((data) => setCustomData(data.data));
   };
 
+  // ! SAVE DATA
+  const exportDataToExcel = (data) => {
+    if (data == "today") {
+      const workBook = XLSX.utils.book_new();
+      const workSheet = XLSX.utils.json_to_sheet(todayOrYesterdayData);
+
+      XLSX.utils.book_append_sheet(workBook, workSheet, "MySheet1");
+
+      XLSX.writeFile(workBook, "Nasos.xlsx");
+    } else if (data == "month") {
+      const workBook = XLSX.utils.book_new();
+      const workSheet = XLSX.utils.json_to_sheet(monthOrYearData);
+
+      XLSX.utils.book_append_sheet(workBook, workSheet, "MySheet1");
+
+      XLSX.writeFile(workBook, "Nasos.xlsx");
+    } else if (data == "custom") {
+      const workBook = XLSX.utils.book_new();
+      const workSheet = XLSX.utils.json_to_sheet(customData);
+
+      XLSX.utils.book_append_sheet(workBook, workSheet, "MySheet1");
+
+      XLSX.writeFile(workBook, "Nasos.xlsx");
+    }
+  };
+
   return (
     <HelmetProvider>
       <div>
@@ -372,6 +399,13 @@ const UserNews = () => {
                     >
                       Kechagi
                     </button>
+
+                    <button
+                      onClick={() => exportDataToExcel("today")}
+                      className="btn btn-primary ms-3"
+                    >
+                      Ma'lumotlarni saqlash
+                    </button>
                   </div>
                 </div>
 
@@ -381,16 +415,16 @@ const UserNews = () => {
                       <thead className="c-table__header">
                         <tr>
                           <th className="c-table__col-label text-center">
-                            Jami oqim
+                            Jami oqim m3
                           </th>
                           <th className="c-table__col-label text-center">
-                            Musbat oqim
+                            Musbat oqim m3
                           </th>
                           <th className="c-table__col-label text-center">
-                            Oqim tezligi
+                            Oqim tezligi m3/s
                           </th>
                           <th className="c-table__col-label text-center">
-                            Tezlik
+                            Tezlik m/s
                           </th>
                           <th className="c-table__col-label text-center">
                             Soat
@@ -531,6 +565,13 @@ const UserNews = () => {
                     >
                       Yillik
                     </button>
+
+                    <button
+                      onClick={() => exportDataToExcel("month")}
+                      className="btn btn-primary ms-3"
+                    >
+                      Ma'lumotlarni saqlash
+                    </button>
                   </div>
                 </div>
 
@@ -601,7 +642,7 @@ const UserNews = () => {
                 <div className="role-create-list-wrapper">
                   <h3 className="m-0">Qidirish</h3>
 
-                  <div className="d-flex  justify-content-between flex-wrap mt-3">
+                  <div className="d-flex align-items-start justify-content-between flex-wrap mt-3">
                     <form
                       className="filter-form d-flex align-items-end justify-content-between flex-wrap"
                       onSubmit={searchDataByStationIdAndDataForCustom}
@@ -663,6 +704,13 @@ const UserNews = () => {
 
                       <button className="btn btn-success mt-2">Qidirish</button>
                     </form>
+
+                    <button
+                      onClick={() => exportDataToExcel("custom")}
+                      className="btn btn-primary ms-3"
+                    >
+                      Ma'lumotlarni saqlash
+                    </button>
                   </div>
                 </div>
 

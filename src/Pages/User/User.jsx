@@ -3,6 +3,7 @@ import "./User.css";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import menuBar from "../../assets/images/menu-bar.png";
+import dashboard from "../../assets/images/dashboard.png";
 import news from "../../assets/images/news.png";
 import stations from "../../assets/images/station.png";
 import map from "../../assets/images/map.png";
@@ -11,6 +12,7 @@ import logout from "../../assets/images/logout.png";
 import UserNews from "../UserNews/UserNews";
 import UserMap from "../UserMap/UserMap";
 import UserStations from "../UserStations/UserStations";
+import UserDashboard from "../UserDashboard/UserDashboard";
 
 const User = () => {
   const token = window.localStorage.getItem("accessToken");
@@ -54,6 +56,33 @@ const User = () => {
                     : "sidebar-style"
                 }
                 onClick={() => navigate("/user")}
+              >
+                <img
+                  className="bx bx-menu"
+                  src={dashboard}
+                  alt="menuBar"
+                  width={26}
+                  height={26}
+                />
+                <span className="link_name ms-3">Dashboard</span>
+              </a>
+              <ul className="sub-menu blank">
+                <li>
+                  <a className="link_name" href="#">
+                    Dashboard
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li className="mt-3">
+              <a
+                href="#"
+                className={
+                  location.pathname == "/user/map"
+                    ? "sidebar-active sidebar-style"
+                    : "sidebar-style"
+                }
+                onClick={() => navigate("/user/map")}
               >
                 <img
                   className="bx bx-menu"
@@ -175,7 +204,8 @@ const User = () => {
         <section className="home-section py-3">
           <div className="container-fluid">
             <Routes>
-              <Route path="/" element={<UserMap />} />
+              <Route path="/" element={<UserDashboard />} />
+              <Route path="/map" element={<UserMap />} />
               <Route path="/news" element={<UserNews />} />
               <Route path="/stations" element={<UserStations />} />
             </Routes>

@@ -245,7 +245,6 @@ const AdminUser = () => {
     stationIndexForAttach.forEach((e) => {
       stationIdList.push(attachStationValue[e].value);
     });
-    console.log(changeUserId, stationIdList);
 
     fetch(`${api}/user-join-stations/create`, {
       method: "POST",
