@@ -10,6 +10,7 @@ import {
 import "./UserMap.css";
 import { api } from "../API/Api.global";
 import circleBlue from "../../assets/images/record.png";
+import circleRed from "../../assets/images/circle-red.png";
 
 export default function Home() {
   const [lastData, setLastData] = useState([]);
@@ -33,13 +34,7 @@ export default function Home() {
     })
       .then((res) => res.json())
       .then((data) => {
-        let lastData = [];
-        data.data.forEach((e) => {
-          if (e.lastData != undefined) {
-            lastData.push(e);
-          }
-        });
-        setLastData(lastData);
+        setLastData(data.data);
       });
   }, []);
 
@@ -79,65 +74,81 @@ export default function Home() {
                     }}
                     options={{ maxWidth: "240" }}
                   >
-                    <div>
-                      <div className="d-flex align-items-center mb-1">
-                        <img
-                          src={circleBlue}
-                          alt="circleBlue"
-                          width={12}
-                          height={12}
-                        />
-                        <p className="infowindow-desc m-0 ms-1 me-1">
-                          Musbat oqim:
-                        </p>{" "}
-                        <span className="infowindow-span">
-                          {e.lastData.positiveFlow}
-                        </span>
-                      </div>
+                    {e.lastData != undefined ? (
+                      <div>
+                        <div className="d-flex align-items-center mb-1">
+                          <img
+                            src={circleBlue}
+                            alt="circleBlue"
+                            width={12}
+                            height={12}
+                          />
+                          <p className="infowindow-desc m-0 ms-1 me-1">
+                            Musbat oqim:
+                          </p>{" "}
+                          <span className="infowindow-span">
+                            {e.lastData.positiveFlow}
+                          </span>
+                        </div>
 
-                      <div className="d-flex align-items-center mb-1">
-                        <img
-                          src={circleBlue}
-                          alt="circleBlue"
-                          width={12}
-                          height={12}
-                        />
-                        <p className="m-0 infowindow-desc ms-1 me-1 ">
-                          Jami oqim:
-                        </p>{" "}
-                        <span className="infowindow-span">
-                          {e.lastData.totalsFlow}
-                        </span>
-                      </div>
+                        <div className="d-flex align-items-center mb-1">
+                          <img
+                            src={circleBlue}
+                            alt="circleBlue"
+                            width={12}
+                            height={12}
+                          />
+                          <p className="m-0 infowindow-desc ms-1 me-1 ">
+                            Jami oqim:
+                          </p>{" "}
+                          <span className="infowindow-span">
+                            {e.lastData.totalsFlow}
+                          </span>
+                        </div>
 
-                      <div className="d-flex align-items-center mb-1">
-                        <img
-                          src={circleBlue}
-                          alt="circleBlue"
-                          width={12}
-                          height={12}
-                        />
-                        <p className="m-0 infowindow-desc ms-1 me-1 ">
-                          Oqim tezligi:
-                        </p>{" "}
-                        <span className="infowindow-span">
-                          {e.lastData.flowRate}
-                        </span>
-                      </div>
+                        <div className="d-flex align-items-center mb-1">
+                          <img
+                            src={circleBlue}
+                            alt="circleBlue"
+                            width={12}
+                            height={12}
+                          />
+                          <p className="m-0 infowindow-desc ms-1 me-1 ">
+                            Oqim tezligi:
+                          </p>{" "}
+                          <span className="infowindow-span">
+                            {e.lastData.flowRate}
+                          </span>
+                        </div>
 
-                      <div className="d-flex align-items-center">
-                        <img
-                          src={circleBlue}
-                          alt="circleBlue"
-                          width={12}
-                          height={12}
-                        />
-                        <p className="m-0 infowindow-desc ms-1 me-1">Tezlik:</p>{" "}
-                        <span className="infowindow-span">
-                          {e.lastData.velocity}
-                        </span>
+                        <div className="d-flex align-items-center">
+                          <img
+                            src={circleBlue}
+                            alt="circleBlue"
+                            width={12}
+                            height={12}
+                          />
+                          <p className="m-0 infowindow-desc ms-1 me-1">
+                            Tezlik:
+                          </p>{" "}
+                          <span className="infowindow-span">
+                            {e.lastData.velocity}
+                          </span>
+                        </div>
                       </div>
-                    </div>
+                    ) : (
+                      <div className="d-flex align-items-center justify-content-center mb-1">
+                        <img
+                          src={circleRed}
+                          alt="circleBlue"
+                          width={18}
+                          height={18}
+                        />
+                        <p className="m-0 infowindow-desc-not-last-data fs-6 ms-1 me-1 ">
+                          Ma'lumot kelmagan...
+                        </p>{" "}
+                      </div>
+                    )}
                   </InfoWindowF>
                 ) : null}
               </MarkerF>
