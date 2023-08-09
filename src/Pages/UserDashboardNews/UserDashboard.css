@@ -1,0 +1,71 @@
+.dashboard-top-list-item {
+  padding: 10px 20px;
+  background: #ffffff;
+  border-radius: 10px;
+  max-width: 330px;
+  width: 100%;
+  border-top: 4.5px solid #2fff00;
+}
+
+.user-dashboard-card {
+  background: #D6DCE5;
+  box-shadow: none;
+}
+
+.dashboard-heading {
+  margin-bottom: 28px !important;
+  font-size: 32px;
+}
+
+.dashboard-top-list-item-heading {
+  font-size: 20px;
+  color: #5e6164;
+}
+
+.dashboard-top-list-item-desc {
+  font-size: 25px;
+  font-weight: 600;
+}
+
+.dashboard-top-list-item-three {
+  border-top: 4px solid #ffb700;
+}
+
+.dashboard-top-list-item-one-month {
+  border-top: 4px solid #0040ff;
+}
+
+.dashboard-top-list-item-not-working {
+  border-top: 4px solid #ff0000;
+}
+
+.dashboard-today-heading {
+  margin: 0;
+  margin-top: 30px;
+  font-size: 30px;
+}
+
+.dashboard-more {
+  cursor: pointer;
+  font-size: 17px;
+}
+
+.dashboard-more-wrapper {
+  max-width: 80px;
+  margin-left: auto;
+}
+
+.dashboard-more-wrapper:hover {
+  opacity: 0.7;
+}
+
+.dashboard-more-wrapper:active {
+  opacity: 0.5;
+}
+
+.c-table__header-three th {
+  background-color: #ffb700 !important;
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+}

@@ -11,10 +11,10 @@
 }
 
 .c-table__header th {
-  background-color: #6ECA7F !important;
+  background-color: #0091ff !important;
   font-size: 13px;
   font-weight: 600;
-  color: #252525;
+  color: #ffffff;
 }
 
 @media only screen and (max-width: 840px){

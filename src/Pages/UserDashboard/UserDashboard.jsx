@@ -1,16 +1,21 @@
 import React from "react";
+import { Route, Routes } from "react-router-dom";
+import UserDashboardMore from "../UserDashboardMore/UserDashboardMore";
+import UserDashboardNews from "../UserDashboardNews/UserDashboardNews";
 import { useEffect, useState } from "react";
 import { api } from "../API/Api.global";
-import { Helmet, HelmetProvider } from "react-helmet-async";
-import "./UserDashboard.css";
-import todayChart from "../../assets/images/today-chart.png";
 
 const UserDashboard = () => {
   const [allStation, setAllStation] = useState([]);
+  const [allBalansOrg, setAllBalansOrg] = useState([]);
   const [stationNotWorking, setStationNotWorking] = useState([]);
+  const [stationNotWorkingFive, setStationNotWorkingFive] = useState([]);
   const [stationTodayWorking, setStationTodayWorking] = useState([]);
+  const [stationTodayWorkingFive, setStationTodayWorkingFive] = useState([]);
   const [stationThreeDayWorking, setStationThreeDayWorking] = useState([]);
-  const [stationOneMonthWorking, setStationOneMonthWorking] = useState([]);
+  const [stationThreeDayWorkingFive, setStationThreeDayWorkingFive] = useState(
+    []
+  );
 
   const checkData = (time) => {
     const presentDate = new Date();
@@ -62,8 +67,11 @@ const UserDashboard = () => {
       setAllStation(response.data);
 
       let stationNotWorking = [];
+      let stationNotWorkingFive = [];
       let stationTodayWorking = [];
+      let stationTodayWorkingFive = [];
       let stationThreeDayWorking = [];
+      let stationThreeDayWorkingFive = [];
       let stationOneMonthWorking = [];
 
       response.data.forEach((e) => {
@@ -78,47 +86,72 @@ const UserDashboard = () => {
         }
       });
 
+      for (let i = 0; i < 5; i++) {
+        if (stationNotWorking[i] != undefined) {
+          stationNotWorkingFive.push(stationNotWorking[i]);
+        }
+
+        if (stationTodayWorking[i] != undefined) {
+          stationTodayWorkingFive.push(stationTodayWorking[i]);
+        }
+
+        if (stationThreeDayWorking[i] != undefined) {
+          stationThreeDayWorkingFive.push(stationThreeDayWorking[i]);
+        }
+      }
+      setStationNotWorkingFive(stationNotWorkingFive);
+      setStationTodayWorkingFive(stationTodayWorkingFive);
+      setStationThreeDayWorkingFive(stationThreeDayWorkingFive);
+
       setStationNotWorking(stationNotWorking);
       setStationTodayWorking(stationTodayWorking);
       setStationThreeDayWorking(stationThreeDayWorking);
-      setStationOneMonthWorking(stationOneMonthWorking);
+
+      fetch(`${api}/balance-organizations/all-find`, {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => setAllBalansOrg(data.balanceOrganizations));
     };
 
     requestLastData();
   }, []);
 
   return (
-    <HelmetProvider>
-      <div>
-        <div className="card user-dashboard-card">
-          <div className="card-body pt-3">
-            <div className="dashboard-top-wrapper">
-              <ul className="list-unstyled m-0">
-                <li className="dashboard-top-list-item">
-                  <h4 className="dashboard-top-list-item-heading m-0">
-                    Bugungi ishlagan stansiyalar
-                  </h4>
-                  <div className="d-flex align-items-center justify-content-end mt-4">
-                    <img
-                      src={todayChart}
-                      alt="todayChart"
-                      width={30}
-                      height={30}
-                    />
-                    <p className="m-0 dashboard-top-list-item-desc ms-2">
-                      20 ta
-                    </p>
-                  </div>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-      <Helmet>
-        <script src="../src/assets/js/table.js"></script>
-      </Helmet>
-    </HelmetProvider>
+    <div>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <UserDashboardNews
+              allStation={allStation}
+              allBalansOrg={allBalansOrg}
+              stationNotWorking={stationNotWorking}
+              stationNotWorkingFive={stationNotWorkingFive}
+              stationTodayWorking={stationTodayWorking}
+              stationTodayWorkingFive={stationTodayWorkingFive}
+              stationThreeDayWorking={stationThreeDayWorking}
+              stationThreeDayWorkingFive={stationThreeDayWorkingFive}
+            />
+          }
+        />
+        <Route
+          path="/*"
+          element={
+            <UserDashboardMore
+              allStation={allStation}
+              allBalansOrg={allBalansOrg}
+              stationTodayWorking={stationTodayWorking}
+              stationThreeDayWorking={stationThreeDayWorking}
+            />
+          }
+        />
+      </Routes>
+    </div>
   );
 };
 

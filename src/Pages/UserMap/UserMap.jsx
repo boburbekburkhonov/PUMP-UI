@@ -9,9 +9,9 @@ import {
 import "./UserMap.css";
 import { api } from "../API/Api.global";
 import circleBlue from "../../assets/images/record.png";
-import circleRed from "../../assets/images/circle-red.png";
-import circleGreen from "../../assets/images/circle.png";
-import circleYellow from "../../assets/images/circle-yellow.png";
+import locationRed from "../../assets/images/location-red.png";
+import locationGreen from "../../assets/images/location-green.png";
+import locationYellow from "../../assets/images/location-yellow.png";
 
 export default function Home() {
   const [lastData, setLastData] = useState([]);
@@ -229,33 +229,40 @@ export default function Home() {
             })}
           </GoogleMap>
 
-          <ul className="map-station-wrapper-list list-group list-unstyled m-0">
-            {lastData?.map((e, i) => {
-              return (
-                <li
-                  className="list-group-item list-group-item-action d-flex align-items-center"
-                  key={i}
-                  onClick={() => zoomLocation(e.location)}
-                >
-                  <img
-                    src={
-                      checkStationWorkingOrNot(e.lastData) == 0
-                        ? circleGreen
-                        : checkStationWorkingOrNot(e.lastData) <= 3
-                        ? circleYellow
-                        : checkStationWorkingOrNot(e.lastData) == 404
-                        ? circleRed
-                        : null
-                    }
-                    alt="circleBlue"
-                    width={18}
-                    height={18}
-                  />
-                  <p className="m-0 ms-2">{e.name}</p>
-                </li>
-              );
-            })}
-          </ul>
+          <div className="map-station-wrapper-list">
+            <h5 className="m-0 text-center py-3 text-primary">
+              Umumiy stansiyalar{" "}
+              <span className="text-danger fw-semibold">{lastData.length}</span>{" "}
+              ta
+            </h5>
+            <ul className="list-group list-unstyled m-0">
+              {lastData?.map((e, i) => {
+                return (
+                  <li
+                    className="list-group-item list-group-item-action d-flex align-items-center"
+                    key={i}
+                    onClick={() => zoomLocation(e.location)}
+                  >
+                    <img
+                      src={
+                        checkStationWorkingOrNot(e.lastData) == 0
+                          ? locationGreen
+                          : checkStationWorkingOrNot(e.lastData) <= 3
+                          ? locationYellow
+                          : checkStationWorkingOrNot(e.lastData) == 404
+                          ? locationRed
+                          : null
+                      }
+                      alt="circleBlue"
+                      width={25}
+                      height={25}
+                    />
+                    <p className="m-0 ms-2">{e.name}</p>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
         </div>
       </div>
     </div>

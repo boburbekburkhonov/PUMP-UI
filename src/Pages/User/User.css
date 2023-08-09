@@ -18,7 +18,7 @@
   left: 0;
   height: 100%;
   width: 260px;
-  background: rgb(90, 205, 111);
+  background: #0091ff !important;
   z-index: 100;
   transition: all 0.5s ease;
 }
@@ -113,7 +113,7 @@
 .sidebar .nav-links li a .link_name {
   font-size: 17px;
   font-weight: 500;
-  color: #474747;
+  color: #ffffff;
   transition: all 0.4s ease;
 }
 
@@ -308,5 +308,5 @@
   width: 90%;
 }
 .sidebar-active > span {
-  color: #474747 !important;
+  color: #000000 !important;
 }

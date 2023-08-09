@@ -4,9 +4,13 @@ import { Helmet, HelmetProvider } from "react-helmet-async";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import menuBar from "../../assets/images/menu-bar.png";
 import dashboard from "../../assets/images/dashboard.png";
+import dashboardBlack from "../../assets/images/dashboard-black.png";
 import news from "../../assets/images/news.png";
+import newsWhite from "../../assets/images/news-white.png";
 import stations from "../../assets/images/station.png";
+import stationsWhite from "../../assets/images/station-white.png";
 import map from "../../assets/images/map.png";
+import mapBlack from "../../assets/images/map-black.png";
 import userLogout from "../../assets/images/user-logout.png";
 import logout from "../../assets/images/logout.png";
 import UserNews from "../UserNews/UserNews";
@@ -42,8 +46,8 @@ const User = () => {
               className="bx bx-menu"
               src={menuBar}
               alt="menuBar"
-              width={42}
-              height={27}
+              width={55}
+              height={39}
             />
           </div>
           <ul className="nav-links">
@@ -59,10 +63,12 @@ const User = () => {
               >
                 <img
                   className="bx bx-menu"
-                  src={dashboard}
+                  src={
+                    location.pathname == "/user" ? dashboardBlack : dashboard
+                  }
                   alt="menuBar"
-                  width={26}
-                  height={26}
+                  width={30}
+                  height={30}
                 />
                 <span className="link_name ms-3">Dashboard</span>
               </a>
@@ -86,10 +92,10 @@ const User = () => {
               >
                 <img
                   className="bx bx-menu"
-                  src={map}
+                  src={location.pathname == "/user/map" ? mapBlack : map}
                   alt="menuBar"
-                  width={26}
-                  height={26}
+                  width={30}
+                  height={30}
                 />
                 <span className="link_name ms-3">Xarita</span>
               </a>
@@ -114,7 +120,7 @@ const User = () => {
                 >
                   <img
                     className="bx bx-menu"
-                    src={news}
+                    src={location.pathname == "/user/news" ? news : newsWhite}
                     alt="menuBar"
                     width={26}
                     height={26}
@@ -143,7 +149,11 @@ const User = () => {
                 >
                   <img
                     className="bx bx-menu"
-                    src={stations}
+                    src={
+                      location.pathname == "/user/stations"
+                        ? stations
+                        : stationsWhite
+                    }
                     alt="menuBar"
                     width={33}
                     height={35}
@@ -204,7 +214,7 @@ const User = () => {
         <section className="home-section py-3">
           <div className="container-fluid">
             <Routes>
-              <Route path="/" element={<UserDashboard />} />
+              <Route path="/*" element={<UserDashboard />} />
               <Route path="/map" element={<UserMap />} />
               <Route path="/news" element={<UserNews />} />
               <Route path="/stations" element={<UserStations />} />
