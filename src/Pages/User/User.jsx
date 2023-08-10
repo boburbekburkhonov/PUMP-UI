@@ -20,6 +20,7 @@ import UserDashboard from "../UserDashboard/UserDashboard";
 
 const User = () => {
   const token = window.localStorage.getItem("accessToken");
+  const userName = window.localStorage.getItem("username");
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -181,13 +182,13 @@ const User = () => {
                 aria-expanded="false"
               >
                 <img
-                  className="bx bx-menu"
+                  className="bx bx-menu ms-2"
                   src={userLogout}
                   alt="menuBar"
                   width={30}
                   height={30}
                 />
-                <span className="mx-2">Nasos</span>
+                <span className="mx-2">{userName}</span>
               </button>
               <ul className="dropdown-menu">
                 <li className="d-flex align-items-center justify-content-center ms-auto">

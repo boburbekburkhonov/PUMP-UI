@@ -10,6 +10,10 @@ const UserDashboard = () => {
   const [allBalansOrg, setAllBalansOrg] = useState([]);
   const [stationNotWorking, setStationNotWorking] = useState([]);
   const [stationNotWorkingFive, setStationNotWorkingFive] = useState([]);
+  const [stationOneMonthWorking, setStationOneMonthWorking] = useState([]);
+  const [stationOneMonthWorkingFive, setStationOneMonthWorkingFive] = useState(
+    []
+  );
   const [stationTodayWorking, setStationTodayWorking] = useState([]);
   const [stationTodayWorkingFive, setStationTodayWorkingFive] = useState([]);
   const [stationThreeDayWorking, setStationThreeDayWorking] = useState([]);
@@ -66,6 +70,29 @@ const UserDashboard = () => {
       const response = await request.json();
       setAllStation(response.data);
 
+      if (response.statusCode == 401) {
+        const request = await fetch(`${api}/auth/signIn`, {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({
+            username: window.localStorage.getItem("username"),
+            password: window.localStorage.getItem("password"),
+          }),
+        });
+
+        const response = await request.json();
+
+        if (response.statusCode == 200) {
+          window.localStorage.setItem("accessToken", response.data.accessToken);
+          window.localStorage.setItem(
+            "refreshToken",
+            response.data.refreshToken
+          );
+        }
+      }
+
       let stationNotWorking = [];
       let stationNotWorkingFive = [];
       let stationTodayWorking = [];
@@ -73,6 +100,7 @@ const UserDashboard = () => {
       let stationThreeDayWorking = [];
       let stationThreeDayWorkingFive = [];
       let stationOneMonthWorking = [];
+      let stationOneMonthWorkingFive = [];
 
       response.data.forEach((e) => {
         if (e.lastData == undefined) {
@@ -98,14 +126,20 @@ const UserDashboard = () => {
         if (stationThreeDayWorking[i] != undefined) {
           stationThreeDayWorkingFive.push(stationThreeDayWorking[i]);
         }
+
+        if (stationOneMonthWorking[i] != undefined) {
+          stationOneMonthWorkingFive.push(stationOneMonthWorking[i]);
+        }
       }
       setStationNotWorkingFive(stationNotWorkingFive);
       setStationTodayWorkingFive(stationTodayWorkingFive);
       setStationThreeDayWorkingFive(stationThreeDayWorkingFive);
+      setStationOneMonthWorkingFive(stationOneMonthWorkingFive);
 
       setStationNotWorking(stationNotWorking);
       setStationTodayWorking(stationTodayWorking);
       setStationThreeDayWorking(stationThreeDayWorking);
+      setStationOneMonthWorking(stationOneMonthWorking);
 
       fetch(`${api}/balance-organizations/all-find`, {
         method: "GET",
@@ -136,6 +170,8 @@ const UserDashboard = () => {
               stationTodayWorkingFive={stationTodayWorkingFive}
               stationThreeDayWorking={stationThreeDayWorking}
               stationThreeDayWorkingFive={stationThreeDayWorkingFive}
+              stationOneMonthWorking={stationOneMonthWorking}
+              stationOneMonthWorkingFive={stationOneMonthWorkingFive}
             />
           }
         />
@@ -147,6 +183,8 @@ const UserDashboard = () => {
               allBalansOrg={allBalansOrg}
               stationTodayWorking={stationTodayWorking}
               stationThreeDayWorking={stationThreeDayWorking}
+              stationNotWorking={stationNotWorking}
+              stationOneMonthWorking={stationOneMonthWorking}
             />
           }
         />

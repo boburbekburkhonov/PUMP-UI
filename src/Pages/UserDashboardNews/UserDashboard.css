@@ -4,7 +4,7 @@
   border-radius: 10px;
   max-width: 330px;
   width: 100%;
-  border-top: 4.5px solid #2fff00;
+  border-top: 4.5px solid #00d764;
 }
 
 .user-dashboard-card {
@@ -13,7 +13,6 @@
 }
 
 .dashboard-heading {
-  margin-bottom: 28px !important;
   font-size: 32px;
 }
 
@@ -68,4 +67,31 @@
   font-size: 13px;
   font-weight: 600;
   color: #ffffff;
+}
+
+.c-table__header-today th {
+  background-color: #00d764 !important;
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.c-table__header-notworking th {
+  background-color: #c72a2a !important;
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.table-scrol {
+  max-width: 100vw !important;
+  overflow: auto;
+}
+
+@media (max-width: 980px) {
+
+  .dashboard-statis-wrapper {
+    justify-content: center !important;
+  }
+
 }

@@ -9,6 +9,7 @@ import {
 import "./UserMap.css";
 import { api } from "../API/Api.global";
 import circleBlue from "../../assets/images/record.png";
+import circleRed from "../../assets/images/circle-red.png";
 import locationRed from "../../assets/images/location-red.png";
 import locationGreen from "../../assets/images/location-green.png";
 import locationYellow from "../../assets/images/location-yellow.png";
@@ -29,17 +30,43 @@ export default function Home() {
   const center = useMemo(() => location, [count]);
 
   useEffect(() => {
-    fetch(`${api}/last-data/get-all`, {
-      method: "GET",
-      headers: {
-        "content-type": "application/json",
-        Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setLastData(data.data);
+    const userMap = async () => {
+      const request = await fetch(`${api}/last-data/get-all`, {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+        },
       });
+
+      const response = await request.json();
+      setLastData(response.data);
+
+      if (response.statusCode == 401) {
+        const request = await fetch(`${api}/auth/signIn`, {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({
+            username: window.localStorage.getItem("username"),
+            password: window.localStorage.getItem("password"),
+          }),
+        });
+
+        const response = await request.json();
+
+        if (response.statusCode == 200) {
+          window.localStorage.setItem("accessToken", response.data.accessToken);
+          window.localStorage.setItem(
+            "refreshToken",
+            response.data.refreshToken
+          );
+        }
+      }
+    };
+
+    userMap();
   }, [count]);
 
   const handleActiveMarker = (marker) => {
@@ -232,7 +259,9 @@ export default function Home() {
           <div className="map-station-wrapper-list">
             <h5 className="m-0 text-center py-3 text-primary">
               Umumiy stansiyalar{" "}
-              <span className="text-danger fw-semibold">{lastData.length}</span>{" "}
+              <span className="text-danger fw-semibold">
+                {lastData?.length}
+              </span>{" "}
               ta
             </h5>
             <ul className="list-group list-unstyled m-0">

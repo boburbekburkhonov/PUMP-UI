@@ -8,10 +8,7 @@ const Login = () => {
   const [checkRemember, setCheckRemember] = useState("off");
 
   useEffect(() => {
-    if (
-      window.localStorage.getItem("username") &&
-      window.localStorage.getItem("password")
-    ) {
+    if (window.localStorage.getItem("checkRemember") == "on") {
       fetch(`${api}/auth/signIn`, {
         method: "post",
         headers: {
@@ -55,10 +52,9 @@ const Login = () => {
     const response = await request.json();
 
     if (response.statusCode == 200) {
-      if (checkRemember == "on") {
-        window.localStorage.setItem("username", username.value);
-        window.localStorage.setItem("password", password.value);
-      }
+      window.localStorage.setItem("username", username.value);
+      window.localStorage.setItem("password", password.value);
+      window.localStorage.setItem("checkRemember", checkRemember);
       window.localStorage.setItem("accessToken", response.data.accessToken);
       window.localStorage.setItem("refreshToken", response.data.refreshToken);
       if (response.data.user.role == "SUPERADMIN") {
@@ -155,7 +151,7 @@ const Login = () => {
               fontWeight="bold"
               width="2em"
               height="20px"
-              fill="rgb(0, 221, 61)"
+              fill="rgb(0, 145, 255)"
               aria-hidden="true"
             >
               <path d="M869 487.8L491.2 159.9c-2.9-2.5-6.6-3.9-10.5-3.9h-88.5c-7.4 0-10.8 9.2-5.2 14l350.2 304H152c-4.4 0-8 3.6-8 8v60c0 4.4 3.6 8 8 8h585.1L386.9 854c-5.6 4.9-2.2 14 5.2 14h91.5c1.9 0 3.8-.7 5.2-2L869 536.2a32.07 32.07 0 000-48.4z"></path>
