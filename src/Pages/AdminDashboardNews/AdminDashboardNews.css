@@ -83,13 +83,6 @@
   color: #ffffff;
 }
 
-.c-table__header-others th {
-  background-color: #00aaff !important;
-  font-size: 13px;
-  font-weight: 600;
-  color: #ffffff;
-}
-
 .table-scrol {
   max-width: 100vw !important;
   overflow: auto;
@@ -101,9 +94,4 @@
     justify-content: center !important;
   }
 
-}
-
-.background {
-  background: none;
-  border: none;
 }

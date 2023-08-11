@@ -405,42 +405,45 @@ const UserNews = () => {
 
       XLSX.utils.book_append_sheet(workBook, workSheet, "MySheet1");
 
-      XLSX.writeFile(workBook, "Nasos.xlsx");
+      XLSX.writeFile(
+        workBook,
+        `${todayStationName} ning bugungi ma'lumotlari.xlsx`
+      );
     } else if (data == "yesterday") {
       const workBook = XLSX.utils.book_new();
       const workSheet = XLSX.utils.json_to_sheet(yesterdayData);
 
       XLSX.utils.book_append_sheet(workBook, workSheet, "MySheet1");
 
-      XLSX.writeFile(workBook, "Nasos.xlsx");
+      XLSX.writeFile(workBook, `${yesterdayStationName} ning kecha kelgan ma'lumotlari.xlsx`);
     } else if (data == "daily") {
       const workBook = XLSX.utils.book_new();
       const workSheet = XLSX.utils.json_to_sheet(dailyData);
 
       XLSX.utils.book_append_sheet(workBook, workSheet, "MySheet1");
 
-      XLSX.writeFile(workBook, "Nasos.xlsx");
+      XLSX.writeFile(workBook, `${dailyStationName} ning kunlik ma'lumotlari.xlsx`);
     } else if (data == "month") {
       const workBook = XLSX.utils.book_new();
       const workSheet = XLSX.utils.json_to_sheet(monthData);
 
       XLSX.utils.book_append_sheet(workBook, workSheet, "MySheet1");
 
-      XLSX.writeFile(workBook, "Nasos.xlsx");
+      XLSX.writeFile(workBook, `${monthStationName} ning oylik ma'lumotlari.xlsx`);
     } else if (data == "year") {
       const workBook = XLSX.utils.book_new();
       const workSheet = XLSX.utils.json_to_sheet(yearData);
 
       XLSX.utils.book_append_sheet(workBook, workSheet, "MySheet1");
 
-      XLSX.writeFile(workBook, "Nasos.xlsx");
+      XLSX.writeFile(workBook, `${yearStationName} ning yillik ma'lumotlari.xlsx`);
     } else if (data == "search") {
       const workBook = XLSX.utils.book_new();
       const workSheet = XLSX.utils.json_to_sheet(searchData);
 
       XLSX.utils.book_append_sheet(workBook, workSheet, "MySheet1");
 
-      XLSX.writeFile(workBook, "Nasos.xlsx");
+      XLSX.writeFile(workBook, `${searchStationName} ning ma'lumotlari.xlsx`);
     }
   };
 
@@ -585,16 +588,37 @@ const UserNews = () => {
                           return (
                             <tr className="fs-6 column-admin-station" key={i}>
                               <td className="c-table__cell text-center">
-                                {e.totalsFlow}
+                                {String(e.totalsFlow).includes(".")
+                                  ? String(e.totalsFlow).slice(
+                                      0,
+                                      String(e.totalsFlow).indexOf(".") * 1 + 3
+                                    )
+                                  : e.totalsFlow}
                               </td>
                               <td className="c-table__cell text-center">
-                                {e.positiveFlow}
+                                {String(e.positiveFlow).includes(".")
+                                  ? String(e.positiveFlow).slice(
+                                      0,
+                                      String(e.positiveFlow).indexOf(".") * 1 +
+                                        3
+                                    )
+                                  : e.positiveFlow}
                               </td>
                               <td className="c-table__cell text-center">
-                                {e.flowRate}
+                                {String(e.flowRate).includes(".")
+                                  ? String(e.flowRate).slice(
+                                      0,
+                                      String(e.flowRate).indexOf(".") * 1 + 3
+                                    )
+                                  : e.flowRate}
                               </td>
                               <td className="c-table__cell text-center">
-                                {e.velocity}
+                                {String(e.velocity).includes(".")
+                                  ? String(e.velocity).slice(
+                                      0,
+                                      String(e.velocity).indexOf(".") * 1 + 3
+                                    )
+                                  : e.velocity}
                               </td>
                               <td className="c-table__cell text-center">
                                 {`${e.date.split("T")[1].split(".")[0]}`}
@@ -685,16 +709,37 @@ const UserNews = () => {
                           return (
                             <tr className="fs-6 column-admin-station" key={i}>
                               <td className="c-table__cell text-center">
-                                {e.totalsFlow}
+                                {String(e.totalsFlow).includes(".")
+                                  ? String(e.totalsFlow).slice(
+                                      0,
+                                      String(e.totalsFlow).indexOf(".") * 1 + 3
+                                    )
+                                  : e.totalsFlow}
                               </td>
                               <td className="c-table__cell text-center">
-                                {e.positiveFlow}
+                                {String(e.positiveFlow).includes(".")
+                                  ? String(e.positiveFlow).slice(
+                                      0,
+                                      String(e.positiveFlow).indexOf(".") * 1 +
+                                        3
+                                    )
+                                  : e.positiveFlow}
                               </td>
                               <td className="c-table__cell text-center">
-                                {e.flowRate}
+                                {String(e.flowRate).includes(".")
+                                  ? String(e.flowRate).slice(
+                                      0,
+                                      String(e.flowRate).indexOf(".") * 1 + 3
+                                    )
+                                  : e.flowRate}
                               </td>
                               <td className="c-table__cell text-center">
-                                {e.velocity}
+                                {String(e.velocity).includes(".")
+                                  ? String(e.velocity).slice(
+                                      0,
+                                      String(e.velocity).indexOf(".") * 1 + 3
+                                    )
+                                  : e.velocity}
                               </td>
                               <td className="c-table__cell text-center">
                                 {`${e.date.split("T")[1].split(".")[0]}`}
@@ -805,16 +850,37 @@ const UserNews = () => {
                           return (
                             <tr className="fs-6 column-admin-station" key={i}>
                               <td className="c-table__cell text-center">
-                                {e.totalsFlow}
+                                {String(e.totalsFlow).includes(".")
+                                  ? String(e.totalsFlow).slice(
+                                      0,
+                                      String(e.totalsFlow).indexOf(".") * 1 + 3
+                                    )
+                                  : e.totalsFlow}
                               </td>
                               <td className="c-table__cell text-center">
-                                {e.positiveFlow}
+                                {String(e.positiveFlow).includes(".")
+                                  ? String(e.positiveFlow).slice(
+                                      0,
+                                      String(e.positiveFlow).indexOf(".") * 1 +
+                                        3
+                                    )
+                                  : e.positiveFlow}
                               </td>
                               <td className="c-table__cell text-center">
-                                {e.flowRate}
+                                {String(e.flowRate).includes(".")
+                                  ? String(e.flowRate).slice(
+                                      0,
+                                      String(e.flowRate).indexOf(".") * 1 + 3
+                                    )
+                                  : e.flowRate}
                               </td>
                               <td className="c-table__cell text-center">
-                                {e.velocity}
+                                {String(e.velocity).includes(".")
+                                  ? String(e.velocity).slice(
+                                      0,
+                                      String(e.velocity).indexOf(".") * 1 + 3
+                                    )
+                                  : e.velocity}
                               </td>
                               <td className="c-table__cell text-center">
                                 {`${e.date.split("T")[1].split(".")[0]}`}
@@ -890,7 +956,7 @@ const UserNews = () => {
 
                   <div className="day-btn-wrapper mt-2">
                     <button
-                      onClick={() => exportDataToExcel("daily")}
+                      onClick={() => exportDataToExcel("month")}
                       className="btn btn-primary ms-3"
                     >
                       Ma'lumotlarni saqlash
@@ -925,16 +991,37 @@ const UserNews = () => {
                           return (
                             <tr className="fs-6 column-admin-station" key={i}>
                               <td className="c-table__cell text-center">
-                                {e.totalsFlow}
+                                {String(e.totalsFlow).includes(".")
+                                  ? String(e.totalsFlow).slice(
+                                      0,
+                                      String(e.totalsFlow).indexOf(".") * 1 + 3
+                                    )
+                                  : e.totalsFlow}
                               </td>
                               <td className="c-table__cell text-center">
-                                {e.positiveFlow}
+                                {String(e.positiveFlow).includes(".")
+                                  ? String(e.positiveFlow).slice(
+                                      0,
+                                      String(e.positiveFlow).indexOf(".") * 1 +
+                                        3
+                                    )
+                                  : e.positiveFlow}
                               </td>
                               <td className="c-table__cell text-center">
-                                {e.flowRate}
+                                {String(e.flowRate).includes(".")
+                                  ? String(e.flowRate).slice(
+                                      0,
+                                      String(e.flowRate).indexOf(".") * 1 + 3
+                                    )
+                                  : e.flowRate}
                               </td>
                               <td className="c-table__cell text-center">
-                                {e.velocity}
+                                {String(e.velocity).includes(".")
+                                  ? String(e.velocity).slice(
+                                      0,
+                                      String(e.velocity).indexOf(".") * 1 + 3
+                                    )
+                                  : e.velocity}
                               </td>
                               <td className="c-table__cell text-center">
                                 {e.day}
@@ -1051,16 +1138,37 @@ const UserNews = () => {
                           return (
                             <tr className="fs-6 column-admin-station" key={i}>
                               <td className="c-table__cell text-center">
-                                {e.totalsFlow}
+                                {String(e.totalsFlow).includes(".")
+                                  ? String(e.totalsFlow).slice(
+                                      0,
+                                      String(e.totalsFlow).indexOf(".") * 1 + 3
+                                    )
+                                  : e.totalsFlow}
                               </td>
                               <td className="c-table__cell text-center">
-                                {e.positiveFlow}
+                                {String(e.positiveFlow).includes(".")
+                                  ? String(e.positiveFlow).slice(
+                                      0,
+                                      String(e.positiveFlow).indexOf(".") * 1 +
+                                        3
+                                    )
+                                  : e.positiveFlow}
                               </td>
                               <td className="c-table__cell text-center">
-                                {e.flowRate}
+                                {String(e.flowRate).includes(".")
+                                  ? String(e.flowRate).slice(
+                                      0,
+                                      String(e.flowRate).indexOf(".") * 1 + 3
+                                    )
+                                  : e.flowRate}
                               </td>
                               <td className="c-table__cell text-center">
-                                {e.velocity}
+                                {String(e.velocity).includes(".")
+                                  ? String(e.velocity).slice(
+                                      0,
+                                      String(e.velocity).indexOf(".") * 1 + 3
+                                    )
+                                  : e.velocity}
                               </td>
                               <td className="c-table__cell text-center">
                                 {moment(e.day).format("LL").split(" ")[1]}
@@ -1187,16 +1295,37 @@ const UserNews = () => {
                           return (
                             <tr className="fs-6 column-admin-station" key={i}>
                               <td className="c-table__cell text-center">
-                                {e.totalsFlow}
+                                {String(e.totalsFlow).includes(".")
+                                  ? String(e.totalsFlow).slice(
+                                      0,
+                                      String(e.totalsFlow).indexOf(".") * 1 + 3
+                                    )
+                                  : e.totalsFlow}
                               </td>
                               <td className="c-table__cell text-center">
-                                {e.positiveFlow}
+                                {String(e.positiveFlow).includes(".")
+                                  ? String(e.positiveFlow).slice(
+                                      0,
+                                      String(e.positiveFlow).indexOf(".") * 1 +
+                                        3
+                                    )
+                                  : e.positiveFlow}
                               </td>
                               <td className="c-table__cell text-center">
-                                {e.flowRate}
+                                {String(e.flowRate).includes(".")
+                                  ? String(e.flowRate).slice(
+                                      0,
+                                      String(e.flowRate).indexOf(".") * 1 + 3
+                                    )
+                                  : e.flowRate}
                               </td>
                               <td className="c-table__cell text-center">
-                                {e.velocity}
+                                {String(e.velocity).includes(".")
+                                  ? String(e.velocity).slice(
+                                      0,
+                                      String(e.velocity).indexOf(".") * 1 + 3
+                                    )
+                                  : e.velocity}
                               </td>
                               <td className="c-table__cell text-center">
                                 {`${e.date.split("-")[1]}/${e.date

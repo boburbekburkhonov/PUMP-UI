@@ -1,8 +1,6 @@
 import React from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import "./UserDashboard.css";
-import todayChart from "../../assets/images/today-chart.png";
-import more from "../../assets/images/more.png";
 import { useNavigate } from "react-router-dom";
 
 const UserDashboardNews = (props) => {
@@ -15,8 +13,8 @@ const UserDashboardNews = (props) => {
     stationTodayWorkingFive,
     stationThreeDayWorking,
     stationThreeDayWorkingFive,
-    stationOneMonthWorking,
-    stationOneMonthWorkingFive,
+    stationOtherWorking,
+    stationOtherWorkingFive,
   } = props;
 
   const navigate = useNavigate();
@@ -119,8 +117,7 @@ const UserDashboardNews = (props) => {
                         height={30}
                       />
                       <p className="m-0 dashboard-top-list-item-desc ms-2">
-                        {stationNotWorking.length +
-                          stationOneMonthWorking.length}{" "}
+                        {stationNotWorking.length + stationOtherWorking.length}{" "}
                         ta
                       </p>
                     </div>
@@ -138,67 +135,100 @@ const UserDashboardNews = (props) => {
                 onClick={() => navigate("/user/today")}
                 className="dashboard-more-wrapper d-flex align-items-center"
               >
-                <span className="d-inline-block ms-2 dashboard-more text-primary fw-semibold">
+                <button
+                  className="d-inline-block ms-2 dashboard-more text-primary fw-semibold background"
+                  disabled={stationTodayWorking?.length > 0 ? false : true}
+                >
                   Batafsil
-                </span>
+                </button>
               </div>
 
-              {stationTodayWorking?.length > 0 ? (
-                <table className="c-table mt-4">
-                  <thead className="c-table__header c-table__header-today">
-                    <tr>
-                      <th className="c-table__col-label text-center">Nomi</th>
-                      <th className="c-table__col-label text-center">Topic</th>
-                      <th className="c-table__col-label text-center">
-                        Jami oqim m3
-                      </th>
-                      <th className="c-table__col-label text-center">
-                        Musbat oqim m3
-                      </th>
-                      <th className="c-table__col-label text-center">
-                        Oqim tezligi m3/s
-                      </th>
-                      <th className="c-table__col-label text-center">
-                        Tezlik m/s
-                      </th>
-                      <th className="c-table__col-label text-center">Sana</th>
-                    </tr>
-                  </thead>
-                  <tbody className="c-table__body">
-                    {stationTodayWorkingFive.map((e, i) => {
-                      return (
-                        <tr className="fs-6 column-admin-station" key={i}>
-                          <td className="c-table__cell text-center">
-                            {e.name}
-                          </td>
-                          <td className="c-table__cell text-center">
-                            {e.topic}
-                          </td>
-                          <td className="c-table__cell text-center">
-                            {e?.lastData.totalsFlow}
-                          </td>
-                          <td className="c-table__cell text-center">
-                            {e?.lastData.positiveFlow}
-                          </td>
-                          <td className="c-table__cell text-center">
-                            {e?.lastData.flowRate}
-                          </td>
-                          <td className="c-table__cell text-center">
-                            {e?.lastData.velocity}
-                          </td>
-                          <td className="c-table__cell text-center">
-                            {`${e?.lastData.date.split("T")[1].split(".")[0]}`}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              ) : (
-                <div className="alert alert-primary fw-semibold mt-3 text-center fs-5">
-                  Hozircha ma'lumot kelmadi...
-                </div>
-              )}
+              <table className="c-table mt-4">
+                <thead className="c-table__header c-table__header-today">
+                  <tr>
+                    <th className="c-table__col-label text-center">Nomi</th>
+                    <th className="c-table__col-label text-center">Topic</th>
+                    <th className="c-table__col-label text-center">
+                      Jami oqim m3
+                    </th>
+                    <th className="c-table__col-label text-center">
+                      Musbat oqim m3
+                    </th>
+                    <th className="c-table__col-label text-center">
+                      Oqim tezligi m3/s
+                    </th>
+                    <th className="c-table__col-label text-center">
+                      Tezlik m/s
+                    </th>
+                    <th className="c-table__col-label text-center">Sana</th>
+                  </tr>
+                </thead>
+                <tbody className="c-table__body">
+                  {stationTodayWorking?.length > 0
+                    ? stationTodayWorkingFive.map((e, i) => {
+                        return (
+                          <tr className="fs-6 column-admin-station" key={i}>
+                            <td className="c-table__cell text-center">
+                              {e.name}
+                            </td>
+                            <td className="c-table__cell text-center">
+                              {e.topic}
+                            </td>
+                            <td className="c-table__cell text-center">
+                              {String(e?.lastData.totalsFlow).includes(".")
+                                ? String(e?.lastData.totalsFlow).slice(
+                                    0,
+                                    String(e?.lastData.totalsFlow).indexOf(
+                                      "."
+                                    ) *
+                                      1 +
+                                      3
+                                  )
+                                : e?.lastData.totalsFlow}
+                            </td>
+                            <td className="c-table__cell text-center">
+                              {String(e?.lastData.positiveFlow).includes(".")
+                                ? String(e?.lastData.positiveFlow).slice(
+                                    0,
+                                    String(e?.lastData.positiveFlow).indexOf(
+                                      "."
+                                    ) *
+                                      1 +
+                                      3
+                                  )
+                                : e?.lastData.positiveFlow}
+                            </td>
+                            <td className="c-table__cell text-center">
+                              {String(e?.lastData.flowRate).includes(".")
+                                ? String(e?.lastData.flowRate).slice(
+                                    0,
+                                    String(e?.lastData.flowRate).indexOf(".") *
+                                      1 +
+                                      3
+                                  )
+                                : e?.lastData.flowRate}
+                            </td>
+                            <td className="c-table__cell text-center">
+                              {String(e?.lastData.velocity).includes(".")
+                                ? String(e?.lastData.velocity).slice(
+                                    0,
+                                    String(e?.lastData.velocity).indexOf(".") *
+                                      1 +
+                                      3
+                                  )
+                                : e?.lastData.velocity}
+                            </td>
+                            <td className="c-table__cell text-center">
+                              {`${
+                                e?.lastData.date.split("T")[1].split(".")[0]
+                              }`}
+                            </td>
+                          </tr>
+                        );
+                      })
+                    : null}
+                </tbody>
+              </table>
             </div>
 
             <div id="three">
@@ -210,114 +240,39 @@ const UserDashboardNews = (props) => {
                 onClick={() => navigate("/user/three")}
                 className="dashboard-more-wrapper d-flex align-items-center"
               >
-                <span className="d-inline-block ms-2 dashboard-more text-primary fw-semibold">
+                <button
+                  disabled={
+                    stationThreeDayWorkingFive?.length > 0 ? false : true
+                  }
+                  className="d-inline-block ms-2 dashboard-more text-primary fw-semibold background"
+                >
                   Batafsil
-                </span>
+                </button>
               </div>
 
-              {stationThreeDayWorkingFive?.length > 0 ? (
-                <table className="c-table mt-4">
-                  <thead className="c-table__header c-table__header-three">
-                    <tr>
-                      <th className="c-table__col-label text-center">Nomi</th>
-                      <th className="c-table__col-label text-center">Topic</th>
-                      <th className="c-table__col-label text-center">
-                        Jami oqim m3
-                      </th>
-                      <th className="c-table__col-label text-center">
-                        Musbat oqim m3
-                      </th>
-                      <th className="c-table__col-label text-center">
-                        Oqim tezligi m3/s
-                      </th>
-                      <th className="c-table__col-label text-center">
-                        Tezlik m/s
-                      </th>
-                      <th className="c-table__col-label text-center">Sana</th>
-                    </tr>
-                  </thead>
-                  <tbody className="c-table__body">
-                    {stationThreeDayWorkingFive?.map((e, i) => {
-                      return (
-                        <tr className="fs-6 column-admin-station" key={i}>
-                          <td className="c-table__cell text-center">
-                            {e.name}
-                          </td>
-                          <td className="c-table__cell text-center">
-                            {e.topic}
-                          </td>
-                          <td className="c-table__cell text-center">
-                            {e?.lastData.totalsFlow}
-                          </td>
-                          <td className="c-table__cell text-center">
-                            {e?.lastData.positiveFlow}
-                          </td>
-                          <td className="c-table__cell text-center">
-                            {e?.lastData.flowRate}
-                          </td>
-                          <td className="c-table__cell text-center">
-                            {e?.lastData.velocity}
-                          </td>
-                          <td className="c-table__cell text-center">
-                            {`${
-                              e?.lastData.date.split("-")[1]
-                            }/${e?.lastData.date.split("-")[2].slice(0, 2)}/${
-                              e?.lastData.date.split("-")[0]
-                            }`}{" "}
-                            {`${e?.lastData.date.split("T")[1].split(".")[0]}`}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              ) : (
-                <div className="alert alert-primary fw-semibold mt-3 text-center fs-5">
-                  Hozircha ma'lumot kelmadi...
-                </div>
-              )}
-            </div>
-
-            <div id="notworking">
-              <h5 className="dashboard-today-heading">
-                Ishlamagan stansiyalar
-              </h5>
-
-              <div
-                onClick={() => navigate("/user/notworking")}
-                className="dashboard-more-wrapper d-flex align-items-center"
-              >
-                <span className="d-inline-block ms-2 dashboard-more text-primary fw-semibold">
-                  Batafsil
-                </span>
-              </div>
-
-              {stationNotWorkingFive?.length > 0 ? (
-                <div className="table-scrol">
-                  <table className="c-table mt-4">
-                    <thead className="c-table__header c-table__header-notworking">
-                      <tr>
-                        <th className="c-table__col-label text-center">Nomi</th>
-                        <th className="c-table__col-label text-center">
-                          Topic
-                        </th>
-                        <th className="c-table__col-label text-center">
-                          Jami oqim m3
-                        </th>
-                        <th className="c-table__col-label text-center">
-                          Musbat oqim m3
-                        </th>
-                        <th className="c-table__col-label text-center">
-                          Oqim tezligi m3/s
-                        </th>
-                        <th className="c-table__col-label text-center">
-                          Tezlik m/s
-                        </th>
-                        <th className="c-table__col-label text-center">Sana</th>
-                      </tr>
-                    </thead>
-                    <tbody className="c-table__body">
-                      {stationNotWorkingFive?.map((e, i) => {
+              <table className="c-table mt-4">
+                <thead className="c-table__header c-table__header-three">
+                  <tr>
+                    <th className="c-table__col-label text-center">Nomi</th>
+                    <th className="c-table__col-label text-center">Topic</th>
+                    <th className="c-table__col-label text-center">
+                      Jami oqim m3
+                    </th>
+                    <th className="c-table__col-label text-center">
+                      Musbat oqim m3
+                    </th>
+                    <th className="c-table__col-label text-center">
+                      Oqim tezligi m3/s
+                    </th>
+                    <th className="c-table__col-label text-center">
+                      Tezlik m/s
+                    </th>
+                    <th className="c-table__col-label text-center">Sana</th>
+                  </tr>
+                </thead>
+                <tbody className="c-table__body">
+                  {stationThreeDayWorkingFive?.length > 0
+                    ? stationThreeDayWorkingFive?.map((e, i) => {
                         return (
                           <tr className="fs-6 column-admin-station" key={i}>
                             <td className="c-table__cell text-center">
@@ -326,91 +281,196 @@ const UserDashboardNews = (props) => {
                             <td className="c-table__cell text-center">
                               {e.topic}
                             </td>
-                            <td
-                              className={`c-table__cell text-center ${
-                                e?.lastData == undefined
-                                  ? "text-danger"
-                                  : "text-black"
-                              }`}
-                            >
-                              {e?.lastData != undefined
-                                ? e?.lastData.totalsFlow
-                                : "Ma'lumot kelmagan!"}
+                            <td className="c-table__cell text-center">
+                              {String(e?.lastData.totalsFlow).includes(".")
+                                ? String(e?.lastData.totalsFlow).slice(
+                                    0,
+                                    String(e?.lastData.totalsFlow).indexOf(
+                                      "."
+                                    ) *
+                                      1 +
+                                      3
+                                  )
+                                : e?.lastData.totalsFlow}
                             </td>
-                            <td
-                              className={`c-table__cell text-center ${
-                                e?.lastData == undefined
-                                  ? "text-danger"
-                                  : "text-black"
-                              }`}
-                            >
-                              {e?.lastData != undefined
-                                ? e?.lastData.positiveFlow
-                                : "Ma'lumot kelmagan!"}
+                            <td className="c-table__cell text-center">
+                              {String(e?.lastData.positiveFlow).includes(".")
+                                ? String(e?.lastData.positiveFlow).slice(
+                                    0,
+                                    String(e?.lastData.positiveFlow).indexOf(
+                                      "."
+                                    ) *
+                                      1 +
+                                      3
+                                  )
+                                : e?.lastData.positiveFlow}
                             </td>
-                            <td
-                              className={`c-table__cell text-center ${
-                                e?.lastData == undefined
-                                  ? "text-danger"
-                                  : "text-black"
-                              }`}
-                            >
-                              {e?.lastData != undefined
-                                ? e?.lastData.flowRate
-                                : "Ma'lumot kelmagan!"}
+                            <td className="c-table__cell text-center">
+                              {String(e?.lastData.flowRate).includes(".")
+                                ? String(e?.lastData.flowRate).slice(
+                                    0,
+                                    String(e?.lastData.flowRate).indexOf(".") *
+                                      1 +
+                                      3
+                                  )
+                                : e?.lastData.flowRate}
                             </td>
-                            <td
-                              className={`c-table__cell text-center ${
-                                e?.lastData == undefined
-                                  ? "text-danger"
-                                  : "text-black"
-                              }`}
-                            >
-                              {e?.lastData != undefined
-                                ? e?.lastData.velocity
-                                : "Ma'lumot kelmagan!"}
+                            <td className="c-table__cell text-center">
+                              {String(e?.lastData.velocity).includes(".")
+                                ? String(e?.lastData.velocity).slice(
+                                    0,
+                                    String(e?.lastData.velocity).indexOf(".") *
+                                      1 +
+                                      3
+                                  )
+                                : e?.lastData.velocity}
                             </td>
-                            <td
-                              className={`c-table__cell text-center ${
-                                e?.lastData == undefined
-                                  ? "text-danger"
-                                  : "text-black"
+                            <td className="c-table__cell text-center">
+                              {`${
+                                e?.lastData.date.split("-")[1]
+                              }/${e?.lastData.date.split("-")[2].slice(0, 2)}/${
+                                e?.lastData.date.split("-")[0]
+                              }`}{" "}
+                              {`${
+                                e?.lastData.date.split("T")[1].split(".")[0]
                               }`}
-                            >
-                              {e?.lastData != undefined
-                                ? `${
-                                    e?.lastData.date.split("T")[1].split(".")[0]
-                                  }`
-                                : "Ma'lumot kelmagan!"}
                             </td>
                           </tr>
                         );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
-              ) : (
-                <div className="alert alert-primary fw-semibold mt-3 text-center fs-5">
-                  Hozircha ma'lumot kelmadi...
-                </div>
-              )}
+                      })
+                    : null}
+                </tbody>
+              </table>
             </div>
 
-            <div id="three">
+            <div id="notworking">
               <h5 className="dashboard-today-heading">
-                1 oy ichida ishlagan stansiyalar
+                Uzoq vaqt ishlamagan stansiyalar
               </h5>
 
               <div
-                onClick={() => navigate("/user/onemonth")}
+                onClick={() => navigate("/user/other")}
                 className="dashboard-more-wrapper d-flex align-items-center"
               >
-                <span className="d-inline-block ms-2 dashboard-more text-primary fw-semibold">
+                <button
+                  className="d-inline-block ms-2 dashboard-more text-primary fw-semibold background"
+                  disabled={stationOtherWorkingFive.length > 0 ? false : true}
+                >
                   Batafsil
-                </span>
+                </button>
               </div>
 
-              {stationOneMonthWorkingFive?.length > 0 ? (
+              <table className="c-table mt-4">
+                <thead className="c-table__header c-table__header-others">
+                  <tr>
+                    <th className="c-table__col-label text-center">Nomi</th>
+                    <th className="c-table__col-label text-center">Topic</th>
+                    <th className="c-table__col-label text-center">
+                      Jami oqim m3
+                    </th>
+                    <th className="c-table__col-label text-center">
+                      Musbat oqim m3
+                    </th>
+                    <th className="c-table__col-label text-center">
+                      Oqim tezligi m3/s
+                    </th>
+                    <th className="c-table__col-label text-center">
+                      Tezlik m/s
+                    </th>
+                    <th className="c-table__col-label text-center">Sana</th>
+                  </tr>
+                </thead>
+                <tbody className="c-table__body">
+                  {stationOtherWorkingFive.length > 0
+                    ? stationOtherWorkingFive?.map((e, i) => {
+                        return (
+                          <tr className="fs-6 column-admin-station" key={i}>
+                            <td className="c-table__cell text-center">
+                              {e.name}
+                            </td>
+                            <td className="c-table__cell text-center">
+                              {e.topic}
+                            </td>
+                            <td className="c-table__cell text-center">
+                              {String(e?.lastData.totalsFlow).includes(".")
+                                ? String(e?.lastData.totalsFlow).slice(
+                                    0,
+                                    String(e?.lastData.totalsFlow).indexOf(
+                                      "."
+                                    ) *
+                                      1 +
+                                      3
+                                  )
+                                : e?.lastData.totalsFlow}
+                            </td>
+                            <td className="c-table__cell text-center">
+                              {String(e?.lastData.positiveFlow).includes(".")
+                                ? String(e?.lastData.positiveFlow).slice(
+                                    0,
+                                    String(e?.lastData.positiveFlow).indexOf(
+                                      "."
+                                    ) *
+                                      1 +
+                                      3
+                                  )
+                                : e?.lastData.positiveFlow}
+                            </td>
+                            <td className="c-table__cell text-center">
+                              {String(e?.lastData.flowRate).includes(".")
+                                ? String(e?.lastData.flowRate).slice(
+                                    0,
+                                    String(e?.lastData.flowRate).indexOf(".") *
+                                      1 +
+                                      3
+                                  )
+                                : e?.lastData.flowRate}
+                            </td>
+                            <td className="c-table__cell text-center">
+                              {String(e?.lastData.velocity).includes(".")
+                                ? String(e?.lastData.velocity).slice(
+                                    0,
+                                    String(e?.lastData.velocity).indexOf(".") *
+                                      1 +
+                                      3
+                                  )
+                                : e?.lastData.velocity}
+                            </td>
+                            <td className="c-table__cell text-center">
+                              {`${
+                                e?.lastData.date.split("-")[1]
+                              }/${e?.lastData.date.split("-")[2].slice(0, 2)}/${
+                                e?.lastData.date.split("-")[0]
+                              }`}{" "}
+                              {`${
+                                e?.lastData.date.split("T")[1].split(".")[0]
+                              }`}
+                            </td>
+                          </tr>
+                        );
+                      })
+                    : null}
+                </tbody>
+              </table>
+            </div>
+
+            <div id="notworking">
+              <h5 className="dashboard-today-heading">
+                Umuman ishlamagan stansiyalar
+              </h5>
+
+              <div
+                onClick={() => navigate("/user/notworking")}
+                className="dashboard-more-wrapper d-flex align-items-center"
+              >
+                <button
+                  disabled={stationNotWorkingFive?.length > 0 ? false : true}
+                  className="d-inline-block ms-2 dashboard-more text-primary fw-semibold background"
+                >
+                  Batafsil
+                </button>
+              </div>
+
+              <div className="table-scrol">
                 <table className="c-table mt-4">
                   <thead className="c-table__header c-table__header-notworking">
                     <tr>
@@ -432,45 +492,82 @@ const UserDashboardNews = (props) => {
                     </tr>
                   </thead>
                   <tbody className="c-table__body">
-                    {stationOneMonthWorkingFive?.map((e, i) => {
-                      return (
-                        <tr className="fs-6 column-admin-station" key={i}>
-                          <td className="c-table__cell text-center">
-                            {e.name}
-                          </td>
-                          <td className="c-table__cell text-center">
-                            {e.topic}
-                          </td>
-                          <td className="c-table__cell text-center">
-                            {e?.lastData.totalsFlow}
-                          </td>
-                          <td className="c-table__cell text-center">
-                            {e?.lastData.positiveFlow}
-                          </td>
-                          <td className="c-table__cell text-center">
-                            {e?.lastData.flowRate}
-                          </td>
-                          <td className="c-table__cell text-center">
-                            {e?.lastData.velocity}
-                          </td>
-                          <td className="c-table__cell text-center">
-                            {`${
-                              e?.lastData.date.split("-")[1]
-                            }/${e?.lastData.date.split("-")[2].slice(0, 2)}/${
-                              e?.lastData.date.split("-")[0]
-                            }`}{" "}
-                            {`${e?.lastData.date.split("T")[1].split(".")[0]}`}
-                          </td>
-                        </tr>
-                      );
-                    })}
+                    {stationNotWorkingFive?.length > 0
+                      ? stationNotWorkingFive?.map((e, i) => {
+                          return (
+                            <tr className="fs-6 column-admin-station" key={i}>
+                              <td className="c-table__cell text-center">
+                                {e.name}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                {e.topic}
+                              </td>
+                              <td
+                                className={`c-table__cell text-center ${
+                                  e?.lastData == undefined
+                                    ? "text-danger"
+                                    : "text-black"
+                                }`}
+                              >
+                                {e?.lastData != undefined
+                                  ? e?.lastData.totalsFlow
+                                  : "Ma'lumot kelmagan!"}
+                              </td>
+                              <td
+                                className={`c-table__cell text-center ${
+                                  e?.lastData == undefined
+                                    ? "text-danger"
+                                    : "text-black"
+                                }`}
+                              >
+                                {e?.lastData != undefined
+                                  ? e?.lastData.positiveFlow
+                                  : "Ma'lumot kelmagan!"}
+                              </td>
+                              <td
+                                className={`c-table__cell text-center ${
+                                  e?.lastData == undefined
+                                    ? "text-danger"
+                                    : "text-black"
+                                }`}
+                              >
+                                {e?.lastData != undefined
+                                  ? e?.lastData.flowRate
+                                  : "Ma'lumot kelmagan!"}
+                              </td>
+                              <td
+                                className={`c-table__cell text-center ${
+                                  e?.lastData == undefined
+                                    ? "text-danger"
+                                    : "text-black"
+                                }`}
+                              >
+                                {e?.lastData != undefined
+                                  ? e?.lastData.velocity
+                                  : "Ma'lumot kelmagan!"}
+                              </td>
+                              <td
+                                className={`c-table__cell text-center ${
+                                  e?.lastData == undefined
+                                    ? "text-danger"
+                                    : "text-black"
+                                }`}
+                              >
+                                {e?.lastData != undefined
+                                  ? `${
+                                      e?.lastData.date
+                                        .split("T")[1]
+                                        .split(".")[0]
+                                    }`
+                                  : "Ma'lumot kelmagan!"}
+                              </td>
+                            </tr>
+                          );
+                        })
+                      : null}
                   </tbody>
                 </table>
-              ) : (
-                <div className="alert alert-primary fw-semibold mt-3 text-center fs-5">
-                  Hozircha ma'lumot kelmadi...
-                </div>
-              )}
+              </div>
             </div>
           </div>
         </div>

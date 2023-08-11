@@ -2,17 +2,24 @@ import React, { useEffect } from "react";
 import "./Admin.css";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import menuBar from "../../assets/images/menu-bar.png";
-import dashboard from "../../assets/images/dashboard.png";
-import news from "../../assets/images/news.png";
-import stations from "../../assets/images/station.png";
-import user from "../../assets/images/user.png";
-import userLogout from "../../assets/images/user-logout.png";
-import logout from "../../assets/images/logout.png";
 import AdminUser from "../AdminUser/AdminUser";
 import AdminStation from "../AdminStation/AdminStation";
 import AdminDashboard from "../AdminDashboard/AdminDashboard";
 import AdminNews from "../AdminNews/AdminNews";
+import menuBar from "../../assets/images/menu-bar.png";
+import dashboard from "../../assets/images/dashboard.png";
+import dashboardBlack from "../../assets/images/dashboard-black.png";
+import news from "../../assets/images/news.png";
+import newsWhite from "../../assets/images/news-white.png";
+import stations from "../../assets/images/station.png";
+import stationsWhite from "../../assets/images/station-white.png";
+import map from "../../assets/images/map.png";
+import mapBlack from "../../assets/images/map-black.png";
+import userLogout from "../../assets/images/user-logout.png";
+import user from "../../assets/images/user.png";
+import userWhite from "../../assets/images/user-white.png";
+import logout from "../../assets/images/logout.png";
+import AdminMap from "../AdminMap/AdminMap";
 
 const Admin = () => {
   const token = window.localStorage.getItem("accessToken");
@@ -42,8 +49,8 @@ const Admin = () => {
               className="bx bx-menu"
               src={menuBar}
               alt="menuBar"
-              width={42}
-              height={27}
+              width={55}
+              height={39}
             />
           </div>
           <ul className="nav-links">
@@ -59,7 +66,9 @@ const Admin = () => {
               >
                 <img
                   className="bx bx-menu"
-                  src={dashboard}
+                  src={
+                    location.pathname == "/admin" ? dashboardBlack : dashboard
+                  }
                   alt="menuBar"
                   width={26}
                   height={26}
@@ -74,6 +83,35 @@ const Admin = () => {
                 </li>
               </ul>
             </li>
+
+            <li className="mt-3">
+              <a
+                href="#"
+                className={
+                  location.pathname == "/admin/map"
+                    ? "sidebar-active sidebar-style"
+                    : "sidebar-style"
+                }
+                onClick={() => navigate("/admin/map")}
+              >
+                <img
+                  className="bx bx-menu"
+                  src={location.pathname == "/admin/map" ? mapBlack : map}
+                  alt="menuBar"
+                  width={26}
+                  height={26}
+                />
+                <span className="link_name ms-3">Xarita</span>
+              </a>
+              <ul className="sub-menu blank">
+                <li>
+                  <a className="link_name" href="#">
+                    Xarita
+                  </a>
+                </li>
+              </ul>
+            </li>
+
             <li className="mt-3">
               <div className="icon-link">
                 <a
@@ -87,7 +125,7 @@ const Admin = () => {
                 >
                   <img
                     className="bx bx-menu"
-                    src={news}
+                    src={location.pathname == "/admin/news" ? news : newsWhite}
                     alt="menuBar"
                     width={26}
                     height={26}
@@ -116,7 +154,11 @@ const Admin = () => {
                 >
                   <img
                     className="bx bx-menu"
-                    src={stations}
+                    src={
+                      location.pathname == "/admin/stations"
+                        ? stations
+                        : stationsWhite
+                    }
                     alt="menuBar"
                     width={33}
                     height={35}
@@ -144,7 +186,7 @@ const Admin = () => {
               >
                 <img
                   className="bx bx-menu"
-                  src={user}
+                  src={location.pathname == "/admin/users" ? user : userWhite}
                   alt="menuBar"
                   width={26}
                   height={26}
@@ -204,7 +246,8 @@ const Admin = () => {
         <section className="home-section py-3">
           <div className="container-fluid">
             <Routes>
-              <Route path="/" element={<AdminDashboard />} />
+              <Route path="/*" element={<AdminDashboard />} />
+              <Route path="/map" element={<AdminMap />} />
               <Route path="/stations" element={<AdminStation />} />
               <Route path="/news" element={<AdminNews />} />
               <Route path="/users" element={<AdminUser />} />

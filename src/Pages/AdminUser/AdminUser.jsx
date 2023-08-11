@@ -430,7 +430,7 @@ const AdminUser = () => {
                 </button>
               </div>
               <div className="modal-body fw-semibold fs-5 text-dark text-center modal-delete-device">
-                O'ylab ko'ring! <span className="text-success"> user </span> ni
+                O'ylab ko'ring! <span className="text-primary"> user </span> ni
                 oʻchirish doimiy boʻladi.
               </div>
               <div className="modal-footer border-top-0">
@@ -538,7 +538,7 @@ const AdminUser = () => {
                 </button>
               </div>
               <div className="modal-body fw-semibold fs-5 text-dark text-center modal-delete-device">
-                O'ylab ko'ring! <span className="text-success"> role </span> ni
+                O'ylab ko'ring! <span className="text-primary"> role </span> ni
                 oʻchirish doimiy boʻladi.
               </div>
               <div className="modal-footer border-top-0">
@@ -589,7 +589,7 @@ const AdminUser = () => {
               </div>
               <div className="modal-body ">
                 <div className="d-flex justify-content-between">
-                  <div>
+                  <div className="attach-form-wrapper">
                     <h4>Stansiyalar</h4>
                     <form onSubmit={attachStation}>
                       {allStations?.map((e, i) => {
@@ -623,11 +623,9 @@ const AdminUser = () => {
                         );
                       })}
 
-                      <button className="btn btn-success">Biriktirish</button>
+                      <button className="btn btn-primary">Biriktirish</button>
                     </form>
                   </div>
-
-                  <span className="user-station-frame"></span>
 
                   <div>
                     <h4>Foydalanuvchiga tegishli stansiyalar</h4>

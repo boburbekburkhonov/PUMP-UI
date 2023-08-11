@@ -10,10 +10,8 @@ const UserDashboard = () => {
   const [allBalansOrg, setAllBalansOrg] = useState([]);
   const [stationNotWorking, setStationNotWorking] = useState([]);
   const [stationNotWorkingFive, setStationNotWorkingFive] = useState([]);
-  const [stationOneMonthWorking, setStationOneMonthWorking] = useState([]);
-  const [stationOneMonthWorkingFive, setStationOneMonthWorkingFive] = useState(
-    []
-  );
+  const [stationOtherWorking, setStationOtherWorking] = useState([]);
+  const [stationOtherWorkingFive, setStationOtherWorkingFive] = useState([]);
   const [stationTodayWorking, setStationTodayWorking] = useState([]);
   const [stationTodayWorkingFive, setStationTodayWorkingFive] = useState([]);
   const [stationThreeDayWorking, setStationThreeDayWorking] = useState([]);
@@ -44,16 +42,6 @@ const UserDashboard = () => {
         startDate.getDate() <= 31)
     ) {
       return 1;
-    } else if (
-      (startDate.getFullYear() == presentDate.getFullYear() &&
-        presentDate.getMonth() == startDate.getMonth() &&
-        presentDate.getDate() - startDate.getDate() > 3 &&
-        presentDate.getDate() - startDate.getDate() < 31) ||
-      (startDate.getFullYear() == presentDate.getFullYear() &&
-        presentDate.getMonth() - startDate.getMonth() == 1 &&
-        presentDate.getDate() - startDate.getDate() <= 0)
-    ) {
-      return 30;
     }
   };
 
@@ -99,8 +87,8 @@ const UserDashboard = () => {
       let stationTodayWorkingFive = [];
       let stationThreeDayWorking = [];
       let stationThreeDayWorkingFive = [];
-      let stationOneMonthWorking = [];
-      let stationOneMonthWorkingFive = [];
+      let stationOtherWorking = [];
+      let stationOtherWorkingFive = [];
 
       response.data.forEach((e) => {
         if (e.lastData == undefined) {
@@ -109,8 +97,8 @@ const UserDashboard = () => {
           stationTodayWorking.push(e);
         } else if (checkData(e.lastData.date) <= 3) {
           stationThreeDayWorking.push(e);
-        } else if (checkData(e.lastData.date) == 30) {
-          stationOneMonthWorking.push(e);
+        } else {
+          stationOtherWorking.push(e);
         }
       });
 
@@ -127,19 +115,19 @@ const UserDashboard = () => {
           stationThreeDayWorkingFive.push(stationThreeDayWorking[i]);
         }
 
-        if (stationOneMonthWorking[i] != undefined) {
-          stationOneMonthWorkingFive.push(stationOneMonthWorking[i]);
+        if (stationOtherWorking[i] != undefined) {
+          stationOtherWorkingFive.push(stationOtherWorking[i]);
         }
       }
       setStationNotWorkingFive(stationNotWorkingFive);
       setStationTodayWorkingFive(stationTodayWorkingFive);
       setStationThreeDayWorkingFive(stationThreeDayWorkingFive);
-      setStationOneMonthWorkingFive(stationOneMonthWorkingFive);
+      setStationOtherWorkingFive(stationOtherWorkingFive);
 
       setStationNotWorking(stationNotWorking);
       setStationTodayWorking(stationTodayWorking);
       setStationThreeDayWorking(stationThreeDayWorking);
-      setStationOneMonthWorking(stationOneMonthWorking);
+      setStationOtherWorking(stationOtherWorking);
 
       fetch(`${api}/balance-organizations/all-find`, {
         method: "GET",
@@ -170,8 +158,8 @@ const UserDashboard = () => {
               stationTodayWorkingFive={stationTodayWorkingFive}
               stationThreeDayWorking={stationThreeDayWorking}
               stationThreeDayWorkingFive={stationThreeDayWorkingFive}
-              stationOneMonthWorking={stationOneMonthWorking}
-              stationOneMonthWorkingFive={stationOneMonthWorkingFive}
+              stationOtherWorking={stationOtherWorking}
+              stationOtherWorkingFive={stationOtherWorkingFive}
             />
           }
         />
@@ -184,7 +172,7 @@ const UserDashboard = () => {
               stationTodayWorking={stationTodayWorking}
               stationThreeDayWorking={stationThreeDayWorking}
               stationNotWorking={stationNotWorking}
-              stationOneMonthWorking={stationOneMonthWorking}
+              stationOtherWorking={stationOtherWorking}
             />
           }
         />

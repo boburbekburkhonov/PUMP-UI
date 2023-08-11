@@ -31,14 +31,3 @@
 .list-group-item {
   cursor: pointer;
 }
-
-.active-user-map {
-  background: #0091FF !important;
-  color: white;
-}
-
-.active-user-map:hover {
-  background: #0091FF !important;
-  color: white;
-  opacity: 0.7;
-}

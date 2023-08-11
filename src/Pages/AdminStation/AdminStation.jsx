@@ -426,7 +426,7 @@ const AdminStation = () => {
           <div className="modal-dialog table-location-width modal-dialog-centered">
             <div className="modal-content table-location-scrol">
               <div className="modal-header lastdata-close pb-3 pb-0">
-                <h3 className="m-0 text-success fs-3">{stationOne?.name}</h3>
+                <h3 className="m-0 text-primary fs-3">{stationOne?.name}</h3>
 
                 <button
                   type="button"
@@ -731,7 +731,7 @@ const AdminStation = () => {
               </div>
               <div className="modal-body fw-semibold fs-5 text-dark text-center modal-delete-device">
                 O'ylab ko'ring!
-                <span className="text-success"> stansiya </span>
+                <span className="text-primary"> stansiya </span>
                 ni oʻchirish doimiy boʻladi.
               </div>
               <div className="modal-footer border-top-0">
@@ -770,7 +770,7 @@ const AdminStation = () => {
               <div className="modal-header">
                 <div className="d-flex align-items-center">
                   <h1
-                    className="modal-title fs-4 fw-semibold text-success"
+                    className="modal-title fs-4 fw-semibold text-primary"
                     id="staticBackdropLabel"
                   >
                     Excel
@@ -800,7 +800,7 @@ const AdminStation = () => {
                             <div className="kb-modal-data-title">
                               <div className="kb-data-title d-flex align-items-center ">
                                 <h6>
-                                  <span className="text-success fs-5 fw-semibold">
+                                  <span className="text-primary fs-5 fw-semibold">
                                     Excel file
                                   </span>{" "}
                                   kiriting
@@ -865,7 +865,7 @@ const AdminStation = () => {
                               <div className="kb-buttons-box">
                                 <button
                                   type="submit"
-                                  className="btn btn-success form-submit"
+                                  className="btn btn-primary form-submit"
                                 >
                                   Yuklash
                                 </button>
@@ -943,7 +943,7 @@ const AdminStation = () => {
                     <option value="all">All</option>
                   </select>
 
-                  <button className="btn btn-success">Qidirish</button>
+                  <button className="btn btn-primary">Qidirish</button>
                 </form>
 
                 {allStation?.length == 0 || allStation.includes(undefined) ? (

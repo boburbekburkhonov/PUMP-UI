@@ -6,7 +6,7 @@ import { useLocation } from "react-router-dom";
 import * as XLSX from "xlsx";
 import { api } from "../API/Api.global";
 
-const UserDashboardMore = (props) => {
+const AdminDashboardMore = (props) => {
   const location = useLocation();
   const [allRegion, setAllRegion] = useState([]);
   const [allDistrict, setAllDistrict] = useState([]);
@@ -16,7 +16,7 @@ const UserDashboardMore = (props) => {
     stationNotWorking,
     stationTodayWorking,
     stationThreeDayWorking,
-    stationOtherWorking,
+    stationOneMonthWorking,
   } = props;
 
   useEffect(() => {
@@ -79,16 +79,7 @@ const UserDashboardMore = (props) => {
 
       XLSX.utils.book_append_sheet(workBook, workSheet, "MySheet1");
 
-      XLSX.writeFile(
-        workBook,
-        `${
-          allBalansOrg.find((e) => {
-            if (e.id == allStation[0]?.balance_organization_id) {
-              return e;
-            }
-          })?.name
-        } ning bugun kelgan ma'lumotlari.xlsx`
-      );
+      XLSX.writeFile(workBook, "Nasos.xlsx");
     } else if (data == "three") {
       let resultStationThreeDayWorking = [];
 
@@ -125,16 +116,7 @@ const UserDashboardMore = (props) => {
 
       XLSX.utils.book_append_sheet(workBook, workSheet, "MySheet1");
 
-      XLSX.writeFile(
-        workBook,
-        `${
-          allBalansOrg.find((e) => {
-            if (e.id == allStation[0]?.balance_organization_id) {
-              return e;
-            }
-          })?.name
-        } ning 3 kun ichida kelgan ma'lumotlari.xlsx`
-      );
+      XLSX.writeFile(workBook, "Nasos.xlsx");
     } else if (data == "notworking") {
       let resultStationNotWorking = [];
 
@@ -189,20 +171,11 @@ const UserDashboardMore = (props) => {
 
       XLSX.utils.book_append_sheet(workBook, workSheet, "MySheet1");
 
-      XLSX.writeFile(
-        workBook,
-        `${
-          allBalansOrg.find((e) => {
-            if (e.id == allStation[0]?.balance_organization_id) {
-              return e;
-            }
-          })?.name
-        } ning umuman ishlamagan stansiya ma'lumotlari.xlsx`
-      );
-    } else if (data == "other") {
+      XLSX.writeFile(workBook, "Nasos.xlsx");
+    } else if (data == "onemonth") {
       let resultStationOneMonth = [];
 
-      stationOtherWorking.forEach((e) => {
+      stationOneMonthWorking.forEach((e) => {
         resultStationOneMonth.push({
           _id: e._id,
           name: e.name,
@@ -253,16 +226,7 @@ const UserDashboardMore = (props) => {
 
       XLSX.utils.book_append_sheet(workBook, workSheet, "MySheet1");
 
-      XLSX.writeFile(
-        workBook,
-        `${
-          allBalansOrg.find((e) => {
-            if (e.id == allStation[0]?.balance_organization_id) {
-              return e;
-            }
-          })?.name
-        } ning uzoq vaqt ishlamagan stansiya ma'lumotlari.xlsx`
-      );
+      XLSX.writeFile(workBook, "Nasos.xlsx");
     }
   };
 
@@ -377,52 +341,16 @@ const UserDashboardMore = (props) => {
                                 {e.devicePhoneNum}
                               </td>
                               <td className="c-table__cell text-center">
-                                {String(e?.lastData.totalsFlow).includes(".")
-                                  ? String(e?.lastData.totalsFlow).slice(
-                                      0,
-                                      String(e?.lastData.totalsFlow).indexOf(
-                                        "."
-                                      ) *
-                                        1 +
-                                        3
-                                    )
-                                  : e?.lastData.totalsFlow}
+                                {e?.lastData.totalsFlow}
                               </td>
                               <td className="c-table__cell text-center">
-                                {String(e?.lastData.positiveFlow).includes(".")
-                                  ? String(e?.lastData.positiveFlow).slice(
-                                      0,
-                                      String(e?.lastData.positiveFlow).indexOf(
-                                        "."
-                                      ) *
-                                        1 +
-                                        3
-                                    )
-                                  : e?.lastData.positiveFlow}
+                                {e?.lastData.positiveFlow}
                               </td>
                               <td className="c-table__cell text-center">
-                                {String(e?.lastData.flowRate).includes(".")
-                                  ? String(e?.lastData.flowRate).slice(
-                                      0,
-                                      String(e?.lastData.flowRate).indexOf(
-                                        "."
-                                      ) *
-                                        1 +
-                                        3
-                                    )
-                                  : e?.lastData.flowRate}
+                                {e?.lastData.flowRate}
                               </td>
                               <td className="c-table__cell text-center">
-                                {String(e?.lastData.velocity).includes(".")
-                                  ? String(e?.lastData.velocity).slice(
-                                      0,
-                                      String(e?.lastData.velocity).indexOf(
-                                        "."
-                                      ) *
-                                        1 +
-                                        3
-                                    )
-                                  : e?.lastData.velocity}
+                                {e?.lastData.velocity}
                               </td>
                               <td className="c-table__cell text-center">
                                 {`${
@@ -518,52 +446,16 @@ const UserDashboardMore = (props) => {
                                 {e.devicePhoneNum}
                               </td>
                               <td className="c-table__cell text-center">
-                                {String(e?.lastData.totalsFlow).includes(".")
-                                  ? String(e?.lastData.totalsFlow).slice(
-                                      0,
-                                      String(e?.lastData.totalsFlow).indexOf(
-                                        "."
-                                      ) *
-                                        1 +
-                                        3
-                                    )
-                                  : e?.lastData.totalsFlow}
+                                {e?.lastData.totalsFlow}
                               </td>
                               <td className="c-table__cell text-center">
-                                {String(e?.lastData.positiveFlow).includes(".")
-                                  ? String(e?.lastData.positiveFlow).slice(
-                                      0,
-                                      String(e?.lastData.positiveFlow).indexOf(
-                                        "."
-                                      ) *
-                                        1 +
-                                        3
-                                    )
-                                  : e?.lastData.positiveFlow}
+                                {e?.lastData.positiveFlow}
                               </td>
                               <td className="c-table__cell text-center">
-                                {String(e?.lastData.flowRate).includes(".")
-                                  ? String(e?.lastData.flowRate).slice(
-                                      0,
-                                      String(e?.lastData.flowRate).indexOf(
-                                        "."
-                                      ) *
-                                        1 +
-                                        3
-                                    )
-                                  : e?.lastData.flowRate}
+                                {e?.lastData.flowRate}
                               </td>
                               <td className="c-table__cell text-center">
-                                {String(e?.lastData.velocity).includes(".")
-                                  ? String(e?.lastData.velocity).slice(
-                                      0,
-                                      String(e?.lastData.velocity).indexOf(
-                                        "."
-                                      ) *
-                                        1 +
-                                        3
-                                    )
-                                  : e?.lastData.velocity}
+                                {e?.lastData.velocity}
                               </td>
                               <td className="c-table__cell text-center">
                                 {`${
@@ -736,9 +628,9 @@ const UserDashboardMore = (props) => {
                   </div>
                 )}
               </div>
-            ) : location.pathname.split("/")[2] == "other" ? (
+            ) : location.pathname.split("/")[2] == "onemonth" ? (
               <div>
-                {stationOtherWorking?.length > 0 ? (
+                {stationOneMonthWorking?.length > 0 ? (
                   <div className="table-scrol">
                     <table className="c-table mt-4">
                       <thead className="c-table__header c-table__header-notworking">
@@ -779,7 +671,7 @@ const UserDashboardMore = (props) => {
                         </tr>
                       </thead>
                       <tbody className="c-table__body">
-                        {stationOtherWorking.map((e, i) => {
+                        {stationOneMonthWorking.map((e, i) => {
                           return (
                             <tr className="fs-6 column-admin-station" key={i}>
                               <td className="c-table__cell text-center">
@@ -812,65 +704,70 @@ const UserDashboardMore = (props) => {
                               <td className="c-table__cell text-center">
                                 {e.devicePhoneNum}
                               </td>
-                              <td className="c-table__cell text-center">
-                                {String(e?.lastData.totalsFlow).includes(".")
-                                  ? String(e?.lastData.totalsFlow).slice(
-                                      0,
-                                      String(e?.lastData.totalsFlow).indexOf(
-                                        "."
-                                      ) *
-                                        1 +
-                                        3
-                                    )
-                                  : e?.lastData.totalsFlow}
-                              </td>
-                              <td className="c-table__cell text-center">
-                                {String(e?.lastData.positiveFlow).includes(".")
-                                  ? String(e?.lastData.positiveFlow).slice(
-                                      0,
-                                      String(e?.lastData.positiveFlow).indexOf(
-                                        "."
-                                      ) *
-                                        1 +
-                                        3
-                                    )
-                                  : e?.lastData.positiveFlow}
-                              </td>
-                              <td className="c-table__cell text-center">
-                                {String(e?.lastData.flowRate).includes(".")
-                                  ? String(e?.lastData.flowRate).slice(
-                                      0,
-                                      String(e?.lastData.flowRate).indexOf(
-                                        "."
-                                      ) *
-                                        1 +
-                                        3
-                                    )
-                                  : e?.lastData.flowRate}
-                              </td>
-                              <td className="c-table__cell text-center">
-                                {String(e?.lastData.velocity).includes(".")
-                                  ? String(e?.lastData.velocity).slice(
-                                      0,
-                                      String(e?.lastData.velocity).indexOf(
-                                        "."
-                                      ) *
-                                        1 +
-                                        3
-                                    )
-                                  : e?.lastData.velocity}
-                              </td>
-                              <td className="c-table__cell text-center">
-                                {`${
-                                  e?.lastData.date.split("-")[1]
-                                }/${e?.lastData.date
-                                  .split("-")[2]
-                                  .slice(0, 2)}/${
-                                  e?.lastData.date.split("-")[0]
-                                }`}{" "}
-                                {`${
-                                  e?.lastData.date.split("T")[1].split(".")[0]
+                              <td
+                                className={`c-table__cell text-center ${
+                                  e?.lastData == undefined
+                                    ? "text-danger"
+                                    : "text-black"
                                 }`}
+                              >
+                                {e?.lastData != undefined
+                                  ? e?.lastData.totalsFlow
+                                  : "Ma'lumot kelmagan!"}
+                              </td>
+                              <td
+                                className={`c-table__cell text-center ${
+                                  e?.lastData == undefined
+                                    ? "text-danger"
+                                    : "text-black"
+                                }`}
+                              >
+                                {e?.lastData != undefined
+                                  ? e?.lastData.positiveFlow
+                                  : "Ma'lumot kelmagan!"}
+                              </td>
+                              <td
+                                className={`c-table__cell text-center ${
+                                  e?.lastData == undefined
+                                    ? "text-danger"
+                                    : "text-black"
+                                }`}
+                              >
+                                {e?.lastData != undefined
+                                  ? e?.lastData.flowRate
+                                  : "Ma'lumot kelmagan!"}
+                              </td>
+                              <td
+                                className={`c-table__cell text-center ${
+                                  e?.lastData == undefined
+                                    ? "text-danger"
+                                    : "text-black"
+                                }`}
+                              >
+                                {e?.lastData != undefined
+                                  ? e?.lastData.velocity
+                                  : "Ma'lumot kelmagan!"}
+                              </td>
+                              <td
+                                className={`c-table__cell text-center ${
+                                  e?.lastData == undefined
+                                    ? "text-danger"
+                                    : "text-black"
+                                }`}
+                              >
+                                {e?.lastData != undefined
+                                  ? `${
+                                      e?.lastData.date.split("-")[1]
+                                    }/${e?.lastData.date
+                                      .split("-")[2]
+                                      .slice(0, 2)}/${
+                                      e?.lastData.date.split("-")[0]
+                                    } ${
+                                      e?.lastData.date
+                                        .split("T")[1]
+                                        .split(".")[0]
+                                    }`
+                                  : "Ma'lumot kelmagan!"}
                               </td>
                             </tr>
                           );
@@ -896,4 +793,4 @@ const UserDashboardMore = (props) => {
   );
 };
 
-export default UserDashboardMore;
+export default AdminDashboardMore;

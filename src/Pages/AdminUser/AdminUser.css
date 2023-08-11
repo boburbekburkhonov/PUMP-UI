@@ -83,7 +83,7 @@
 .nav-tabs-bordered .nav-link.active {
   background-color: #fff;
   color: #000000;
-  border-bottom: 2px solid #00ff2f;
+  border-bottom: 2px solid #0091FF;
 }
 
 .input-label-wrapper {
@@ -303,7 +303,7 @@ th {
 }
 
 .btn-create-user {
-  background-color: #2a8f3b !important;
+  background-color: #0091FF !important;
   border: transparent;
 }
 
@@ -316,7 +316,7 @@ th {
 }
 
 .btn-create-role {
-  background-color: #2a8f3b !important;
+  background-color: #0091FF !important;
   border: transparent;
 }
 
@@ -329,11 +329,11 @@ th {
 }
 
 .modal-title {
-  color: #2a8f3b !important;
+  color: #0091FF !important;
 }
 
 .devices-btn {
-  background-color: #2a8f3b !important;
+  background-color: #0091FF !important;
   border: transparent;
 }
 
@@ -383,8 +383,8 @@ th {
 }
 
 .attach-input[type=checkbox]:checked + .attach-label:before {
-  background-color: MediumSeaGreen;
-  border-color: MediumSeaGreen;
+  background-color: #0091FF;
+  border-color: #0091FF;
   color: #fff;
 }
 
@@ -402,5 +402,10 @@ th {
 .user-station-frame {
   width: 2px;
   display: inline-block;
-  background: #81ff00;
+  background: #0091FF;
+}
+
+.attach-form-wrapper {
+  max-height: 70vh;
+  overflow: auto;
 }
