@@ -143,92 +143,98 @@ const UserDashboardNews = (props) => {
                 </button>
               </div>
 
-              <table className="c-table mt-4">
-                <thead className="c-table__header c-table__header-today">
-                  <tr>
-                    <th className="c-table__col-label text-center">Nomi</th>
-                    <th className="c-table__col-label text-center">Topic</th>
-                    <th className="c-table__col-label text-center">
-                      Jami oqim m3
-                    </th>
-                    <th className="c-table__col-label text-center">
-                      Musbat oqim m3
-                    </th>
-                    <th className="c-table__col-label text-center">
-                      Oqim tezligi m3/s
-                    </th>
-                    <th className="c-table__col-label text-center">
-                      Tezlik m/s
-                    </th>
-                    <th className="c-table__col-label text-center">Sana</th>
-                  </tr>
-                </thead>
-                <tbody className="c-table__body">
-                  {stationTodayWorking?.length > 0
-                    ? stationTodayWorkingFive.map((e, i) => {
-                        return (
-                          <tr className="fs-6 column-admin-station" key={i}>
-                            <td className="c-table__cell text-center">
-                              {e.name}
-                            </td>
-                            <td className="c-table__cell text-center">
-                              {e.topic}
-                            </td>
-                            <td className="c-table__cell text-center">
-                              {String(e?.lastData.totalsFlow).includes(".")
-                                ? String(e?.lastData.totalsFlow).slice(
-                                    0,
-                                    String(e?.lastData.totalsFlow).indexOf(
-                                      "."
-                                    ) *
-                                      1 +
-                                      3
-                                  )
-                                : e?.lastData.totalsFlow}
-                            </td>
-                            <td className="c-table__cell text-center">
-                              {String(e?.lastData.positiveFlow).includes(".")
-                                ? String(e?.lastData.positiveFlow).slice(
-                                    0,
-                                    String(e?.lastData.positiveFlow).indexOf(
-                                      "."
-                                    ) *
-                                      1 +
-                                      3
-                                  )
-                                : e?.lastData.positiveFlow}
-                            </td>
-                            <td className="c-table__cell text-center">
-                              {String(e?.lastData.flowRate).includes(".")
-                                ? String(e?.lastData.flowRate).slice(
-                                    0,
-                                    String(e?.lastData.flowRate).indexOf(".") *
-                                      1 +
-                                      3
-                                  )
-                                : e?.lastData.flowRate}
-                            </td>
-                            <td className="c-table__cell text-center">
-                              {String(e?.lastData.velocity).includes(".")
-                                ? String(e?.lastData.velocity).slice(
-                                    0,
-                                    String(e?.lastData.velocity).indexOf(".") *
-                                      1 +
-                                      3
-                                  )
-                                : e?.lastData.velocity}
-                            </td>
-                            <td className="c-table__cell text-center">
-                              {`${
-                                e?.lastData.date.split("T")[1].split(".")[0]
-                              }`}
-                            </td>
-                          </tr>
-                        );
-                      })
-                    : null}
-                </tbody>
-              </table>
+              <div className="table-scrol">
+                <table className="c-table mt-4">
+                  <thead className="c-table__header c-table__header-today">
+                    <tr>
+                      <th className="c-table__col-label text-center">Nomi</th>
+                      <th className="c-table__col-label text-center">Topic</th>
+                      <th className="c-table__col-label text-center">
+                        Jami oqim m3
+                      </th>
+                      <th className="c-table__col-label text-center">
+                        Musbat oqim m3
+                      </th>
+                      <th className="c-table__col-label text-center">
+                        Oqim tezligi m3/s
+                      </th>
+                      <th className="c-table__col-label text-center">
+                        Tezlik m/s
+                      </th>
+                      <th className="c-table__col-label text-center">Sana</th>
+                    </tr>
+                  </thead>
+                  <tbody className="c-table__body">
+                    {stationTodayWorking?.length > 0
+                      ? stationTodayWorkingFive.map((e, i) => {
+                          return (
+                            <tr className="fs-6 column-admin-station" key={i}>
+                              <td className="c-table__cell text-center">
+                                {e.name}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                {e.topic}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                {String(e?.lastData.totalsFlow).includes(".")
+                                  ? String(e?.lastData.totalsFlow).slice(
+                                      0,
+                                      String(e?.lastData.totalsFlow).indexOf(
+                                        "."
+                                      ) *
+                                        1 +
+                                        3
+                                    )
+                                  : e?.lastData.totalsFlow}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                {String(e?.lastData.positiveFlow).includes(".")
+                                  ? String(e?.lastData.positiveFlow).slice(
+                                      0,
+                                      String(e?.lastData.positiveFlow).indexOf(
+                                        "."
+                                      ) *
+                                        1 +
+                                        3
+                                    )
+                                  : e?.lastData.positiveFlow}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                {String(e?.lastData.flowRate).includes(".")
+                                  ? String(e?.lastData.flowRate).slice(
+                                      0,
+                                      String(e?.lastData.flowRate).indexOf(
+                                        "."
+                                      ) *
+                                        1 +
+                                        3
+                                    )
+                                  : e?.lastData.flowRate}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                {String(e?.lastData.velocity).includes(".")
+                                  ? String(e?.lastData.velocity).slice(
+                                      0,
+                                      String(e?.lastData.velocity).indexOf(
+                                        "."
+                                      ) *
+                                        1 +
+                                        3
+                                    )
+                                  : e?.lastData.velocity}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                {`${
+                                  e?.lastData.date.split("T")[1].split(".")[0]
+                                }`}
+                              </td>
+                            </tr>
+                          );
+                        })
+                      : null}
+                  </tbody>
+                </table>
+              </div>
             </div>
 
             <div id="three">
@@ -250,97 +256,105 @@ const UserDashboardNews = (props) => {
                 </button>
               </div>
 
-              <table className="c-table mt-4">
-                <thead className="c-table__header c-table__header-three">
-                  <tr>
-                    <th className="c-table__col-label text-center">Nomi</th>
-                    <th className="c-table__col-label text-center">Topic</th>
-                    <th className="c-table__col-label text-center">
-                      Jami oqim m3
-                    </th>
-                    <th className="c-table__col-label text-center">
-                      Musbat oqim m3
-                    </th>
-                    <th className="c-table__col-label text-center">
-                      Oqim tezligi m3/s
-                    </th>
-                    <th className="c-table__col-label text-center">
-                      Tezlik m/s
-                    </th>
-                    <th className="c-table__col-label text-center">Sana</th>
-                  </tr>
-                </thead>
-                <tbody className="c-table__body">
-                  {stationThreeDayWorkingFive?.length > 0
-                    ? stationThreeDayWorkingFive?.map((e, i) => {
-                        return (
-                          <tr className="fs-6 column-admin-station" key={i}>
-                            <td className="c-table__cell text-center">
-                              {e.name}
-                            </td>
-                            <td className="c-table__cell text-center">
-                              {e.topic}
-                            </td>
-                            <td className="c-table__cell text-center">
-                              {String(e?.lastData.totalsFlow).includes(".")
-                                ? String(e?.lastData.totalsFlow).slice(
-                                    0,
-                                    String(e?.lastData.totalsFlow).indexOf(
-                                      "."
-                                    ) *
-                                      1 +
-                                      3
-                                  )
-                                : e?.lastData.totalsFlow}
-                            </td>
-                            <td className="c-table__cell text-center">
-                              {String(e?.lastData.positiveFlow).includes(".")
-                                ? String(e?.lastData.positiveFlow).slice(
-                                    0,
-                                    String(e?.lastData.positiveFlow).indexOf(
-                                      "."
-                                    ) *
-                                      1 +
-                                      3
-                                  )
-                                : e?.lastData.positiveFlow}
-                            </td>
-                            <td className="c-table__cell text-center">
-                              {String(e?.lastData.flowRate).includes(".")
-                                ? String(e?.lastData.flowRate).slice(
-                                    0,
-                                    String(e?.lastData.flowRate).indexOf(".") *
-                                      1 +
-                                      3
-                                  )
-                                : e?.lastData.flowRate}
-                            </td>
-                            <td className="c-table__cell text-center">
-                              {String(e?.lastData.velocity).includes(".")
-                                ? String(e?.lastData.velocity).slice(
-                                    0,
-                                    String(e?.lastData.velocity).indexOf(".") *
-                                      1 +
-                                      3
-                                  )
-                                : e?.lastData.velocity}
-                            </td>
-                            <td className="c-table__cell text-center">
-                              {`${
-                                e?.lastData.date.split("-")[1]
-                              }/${e?.lastData.date.split("-")[2].slice(0, 2)}/${
-                                e?.lastData.date.split("-")[0]
-                              }`}{" "}
-                              {`${
-                                e?.lastData.date.split("T")[1].split(".")[0]
-                              }`}
-                            </td>
-                          </tr>
-                        );
-                      })
-                    : null}
-                </tbody>
-              </table>
+              <div className="table-scrol">
+                <table className="c-table mt-4">
+                  <thead className="c-table__header c-table__header-three">
+                    <tr>
+                      <th className="c-table__col-label text-center">Nomi</th>
+                      <th className="c-table__col-label text-center">Topic</th>
+                      <th className="c-table__col-label text-center">
+                        Jami oqim m3
+                      </th>
+                      <th className="c-table__col-label text-center">
+                        Musbat oqim m3
+                      </th>
+                      <th className="c-table__col-label text-center">
+                        Oqim tezligi m3/s
+                      </th>
+                      <th className="c-table__col-label text-center">
+                        Tezlik m/s
+                      </th>
+                      <th className="c-table__col-label text-center">Sana</th>
+                    </tr>
+                  </thead>
+                  <tbody className="c-table__body">
+                    {stationThreeDayWorkingFive?.length > 0
+                      ? stationThreeDayWorkingFive?.map((e, i) => {
+                          return (
+                            <tr className="fs-6 column-admin-station" key={i}>
+                              <td className="c-table__cell text-center">
+                                {e.name}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                {e.topic}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                {String(e?.lastData.totalsFlow).includes(".")
+                                  ? String(e?.lastData.totalsFlow).slice(
+                                      0,
+                                      String(e?.lastData.totalsFlow).indexOf(
+                                        "."
+                                      ) *
+                                        1 +
+                                        3
+                                    )
+                                  : e?.lastData.totalsFlow}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                {String(e?.lastData.positiveFlow).includes(".")
+                                  ? String(e?.lastData.positiveFlow).slice(
+                                      0,
+                                      String(e?.lastData.positiveFlow).indexOf(
+                                        "."
+                                      ) *
+                                        1 +
+                                        3
+                                    )
+                                  : e?.lastData.positiveFlow}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                {String(e?.lastData.flowRate).includes(".")
+                                  ? String(e?.lastData.flowRate).slice(
+                                      0,
+                                      String(e?.lastData.flowRate).indexOf(
+                                        "."
+                                      ) *
+                                        1 +
+                                        3
+                                    )
+                                  : e?.lastData.flowRate}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                {String(e?.lastData.velocity).includes(".")
+                                  ? String(e?.lastData.velocity).slice(
+                                      0,
+                                      String(e?.lastData.velocity).indexOf(
+                                        "."
+                                      ) *
+                                        1 +
+                                        3
+                                    )
+                                  : e?.lastData.velocity}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                {`${
+                                  e?.lastData.date.split("-")[1]
+                                }/${e?.lastData.date
+                                  .split("-")[2]
+                                  .slice(0, 2)}/${
+                                  e?.lastData.date.split("-")[0]
+                                }`}{" "}
+                                {`${
+                                  e?.lastData.date.split("T")[1].split(".")[0]
+                                }`}
+                              </td>
+                            </tr>
+                          );
+                        })
+                      : null}
+                  </tbody>
+                </table>
+              </div>
             </div>
 
             <div id="notworking">
@@ -360,97 +374,105 @@ const UserDashboardNews = (props) => {
                 </button>
               </div>
 
-              <table className="c-table mt-4">
-                <thead className="c-table__header c-table__header-others">
-                  <tr>
-                    <th className="c-table__col-label text-center">Nomi</th>
-                    <th className="c-table__col-label text-center">Topic</th>
-                    <th className="c-table__col-label text-center">
-                      Jami oqim m3
-                    </th>
-                    <th className="c-table__col-label text-center">
-                      Musbat oqim m3
-                    </th>
-                    <th className="c-table__col-label text-center">
-                      Oqim tezligi m3/s
-                    </th>
-                    <th className="c-table__col-label text-center">
-                      Tezlik m/s
-                    </th>
-                    <th className="c-table__col-label text-center">Sana</th>
-                  </tr>
-                </thead>
-                <tbody className="c-table__body">
-                  {stationOtherWorkingFive.length > 0
-                    ? stationOtherWorkingFive?.map((e, i) => {
-                        return (
-                          <tr className="fs-6 column-admin-station" key={i}>
-                            <td className="c-table__cell text-center">
-                              {e.name}
-                            </td>
-                            <td className="c-table__cell text-center">
-                              {e.topic}
-                            </td>
-                            <td className="c-table__cell text-center">
-                              {String(e?.lastData.totalsFlow).includes(".")
-                                ? String(e?.lastData.totalsFlow).slice(
-                                    0,
-                                    String(e?.lastData.totalsFlow).indexOf(
-                                      "."
-                                    ) *
-                                      1 +
-                                      3
-                                  )
-                                : e?.lastData.totalsFlow}
-                            </td>
-                            <td className="c-table__cell text-center">
-                              {String(e?.lastData.positiveFlow).includes(".")
-                                ? String(e?.lastData.positiveFlow).slice(
-                                    0,
-                                    String(e?.lastData.positiveFlow).indexOf(
-                                      "."
-                                    ) *
-                                      1 +
-                                      3
-                                  )
-                                : e?.lastData.positiveFlow}
-                            </td>
-                            <td className="c-table__cell text-center">
-                              {String(e?.lastData.flowRate).includes(".")
-                                ? String(e?.lastData.flowRate).slice(
-                                    0,
-                                    String(e?.lastData.flowRate).indexOf(".") *
-                                      1 +
-                                      3
-                                  )
-                                : e?.lastData.flowRate}
-                            </td>
-                            <td className="c-table__cell text-center">
-                              {String(e?.lastData.velocity).includes(".")
-                                ? String(e?.lastData.velocity).slice(
-                                    0,
-                                    String(e?.lastData.velocity).indexOf(".") *
-                                      1 +
-                                      3
-                                  )
-                                : e?.lastData.velocity}
-                            </td>
-                            <td className="c-table__cell text-center">
-                              {`${
-                                e?.lastData.date.split("-")[1]
-                              }/${e?.lastData.date.split("-")[2].slice(0, 2)}/${
-                                e?.lastData.date.split("-")[0]
-                              }`}{" "}
-                              {`${
-                                e?.lastData.date.split("T")[1].split(".")[0]
-                              }`}
-                            </td>
-                          </tr>
-                        );
-                      })
-                    : null}
-                </tbody>
-              </table>
+              <div className="table-scrol">
+                <table className="c-table mt-4">
+                  <thead className="c-table__header c-table__header-others">
+                    <tr>
+                      <th className="c-table__col-label text-center">Nomi</th>
+                      <th className="c-table__col-label text-center">Topic</th>
+                      <th className="c-table__col-label text-center">
+                        Jami oqim m3
+                      </th>
+                      <th className="c-table__col-label text-center">
+                        Musbat oqim m3
+                      </th>
+                      <th className="c-table__col-label text-center">
+                        Oqim tezligi m3/s
+                      </th>
+                      <th className="c-table__col-label text-center">
+                        Tezlik m/s
+                      </th>
+                      <th className="c-table__col-label text-center">Sana</th>
+                    </tr>
+                  </thead>
+                  <tbody className="c-table__body">
+                    {stationOtherWorkingFive.length > 0
+                      ? stationOtherWorkingFive?.map((e, i) => {
+                          return (
+                            <tr className="fs-6 column-admin-station" key={i}>
+                              <td className="c-table__cell text-center">
+                                {e.name}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                {e.topic}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                {String(e?.lastData.totalsFlow).includes(".")
+                                  ? String(e?.lastData.totalsFlow).slice(
+                                      0,
+                                      String(e?.lastData.totalsFlow).indexOf(
+                                        "."
+                                      ) *
+                                        1 +
+                                        3
+                                    )
+                                  : e?.lastData.totalsFlow}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                {String(e?.lastData.positiveFlow).includes(".")
+                                  ? String(e?.lastData.positiveFlow).slice(
+                                      0,
+                                      String(e?.lastData.positiveFlow).indexOf(
+                                        "."
+                                      ) *
+                                        1 +
+                                        3
+                                    )
+                                  : e?.lastData.positiveFlow}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                {String(e?.lastData.flowRate).includes(".")
+                                  ? String(e?.lastData.flowRate).slice(
+                                      0,
+                                      String(e?.lastData.flowRate).indexOf(
+                                        "."
+                                      ) *
+                                        1 +
+                                        3
+                                    )
+                                  : e?.lastData.flowRate}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                {String(e?.lastData.velocity).includes(".")
+                                  ? String(e?.lastData.velocity).slice(
+                                      0,
+                                      String(e?.lastData.velocity).indexOf(
+                                        "."
+                                      ) *
+                                        1 +
+                                        3
+                                    )
+                                  : e?.lastData.velocity}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                {`${
+                                  e?.lastData.date.split("-")[1]
+                                }/${e?.lastData.date
+                                  .split("-")[2]
+                                  .slice(0, 2)}/${
+                                  e?.lastData.date.split("-")[0]
+                                }`}{" "}
+                                {`${
+                                  e?.lastData.date.split("T")[1].split(".")[0]
+                                }`}
+                              </td>
+                            </tr>
+                          );
+                        })
+                      : null}
+                  </tbody>
+                </table>
+              </div>
             </div>
 
             <div id="notworking">

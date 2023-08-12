@@ -406,6 +406,13 @@ th {
 }
 
 .attach-form-wrapper {
-  max-height: 70vh;
+  max-height: 50vh;
   overflow: auto;
+}
+
+.attach-user-region-wrapper {
+  border: 2px solid #0091FF;
+  padding: 10px 20px;
+  border-radius: 10px;
+  margin-bottom: 40px;
 }

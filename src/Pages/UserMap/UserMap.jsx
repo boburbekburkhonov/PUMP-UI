@@ -13,6 +13,7 @@ import circleRed from "../../assets/images/circle-red.png";
 import locationRed from "../../assets/images/location-red.png";
 import locationGreen from "../../assets/images/location-green.png";
 import locationYellow from "../../assets/images/location-yellow.png";
+import locationOrange from "../../assets/images/location-orange.png";
 
 export default function Home() {
   const [lastData, setLastData] = useState([]);
@@ -419,7 +420,7 @@ export default function Home() {
                           ? locationYellow
                           : checkStationWorkingOrNot(e.lastData) == 404
                           ? locationRed
-                          : locationRed
+                          : locationOrange
                       }
                       alt="circleBlue"
                       width={25}

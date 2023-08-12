@@ -23,17 +23,44 @@ const AdminStation = () => {
   const [selectedfile, SetSelectedFile] = useState("");
 
   useEffect(() => {
-    fetch(`${api}/stations/find-all`, {
-      method: "GET",
-      headers: {
-        "content-type": "application/json",
-        Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setAllStation(data.data);
+    const fetchAllStation = async () => {
+      const request = await fetch(`${api}/stations/find-all`, {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+        },
       });
+
+      const response = await request.json();
+
+      if (response.statusCode == 401) {
+        const request = await fetch(`${api}/auth/signIn`, {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({
+            username: window.localStorage.getItem("username"),
+            password: window.localStorage.getItem("password"),
+          }),
+        });
+
+        const response = await request.json();
+
+        if (response.statusCode == 200) {
+          window.localStorage.setItem("accessToken", response.data.accessToken);
+          window.localStorage.setItem(
+            "refreshToken",
+            response.data.refreshToken
+          );
+        }
+      }
+
+      setAllStation(response.data);
+    };
+
+    fetchAllStation();
 
     fetch(`${api}/districts/all`, {
       method: "GET",
@@ -106,16 +133,13 @@ const AdminStation = () => {
   }, []);
 
   const getStationWithId = async (id) => {
-    const requestStationOne = await fetch(
-      `${api}/stations/find-one?id=${id}`,
-      {
-        method: "GET",
-        headers: {
-          "content-type": "application/json",
-          Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
-        },
-      }
-    );
+    const requestStationOne = await fetch(`${api}/stations/find-one?id=${id}`, {
+      method: "GET",
+      headers: {
+        "content-type": "application/json",
+        Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+      },
+    });
 
     const responseStationOne = await requestStationOne.json();
     setStationOne(responseStationOne?.data);
@@ -287,33 +311,25 @@ const AdminStation = () => {
     const { nameOrImeiInput, nameOrImeiSelect } = e.target;
 
     if (nameOrImeiSelect.value == "name") {
-      fetch(
-        `${api}/stations/searchByName?name=${nameOrImeiInput.value}`,
-        {
-          method: "GET",
-          headers: {
-            "content-type": "application/json",
-            Authorization:
-              "Bearer " + window.localStorage.getItem("accessToken"),
-          },
-        }
-      )
+      fetch(`${api}/stations/searchByName?name=${nameOrImeiInput.value}`, {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+        },
+      })
         .then((res) => res.json())
         .then((data) => {
           setAllStation(data.data);
         });
     } else if (nameOrImeiSelect.value == "topic") {
-      fetch(
-        `${api}/stations/find-by-topic?topic=${nameOrImeiInput.value}`,
-        {
-          method: "GET",
-          headers: {
-            "content-type": "application/json",
-            Authorization:
-              "Bearer " + window.localStorage.getItem("accessToken"),
-          },
-        }
-      )
+      fetch(`${api}/stations/find-by-topic?topic=${nameOrImeiInput.value}`, {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+        },
+      })
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
@@ -1268,90 +1284,94 @@ const AdminStation = () => {
                     Hozircha bunday stansiya yo'q...
                   </h3>
                 ) : (
-                  <table className="c-table mt-4">
-                    <thead className="c-table__header">
-                      <tr>
-                        <th className="c-table__col-label text-center">Nomi</th>
-                        <th className="c-table__col-label text-center">
-                          Topic
-                        </th>
-                        <th className="c-table__col-label text-center">
-                          Status
-                        </th>
-                        <th className="c-table__col-label text-center">
-                          Lokatsiya
-                        </th>
-                        <th className="c-table__col-label text-center">
-                          Qurilma telefon raqami
-                        </th>
-                        <th className="c-table__col-label text-center">
-                          O'zgartirish
-                        </th>
-                        <th className="c-table__col-label text-center">
-                          O'chirish
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="c-table__body">
-                      {allStationByBalansOrg?.map((e, i) => {
-                        return (
-                          <tr
-                            className="fs-6 column-admin-station"
-                            key={i}
-                            data-bs-toggle="modal"
-                            data-bs-target="#exampleModal"
-                            onClick={() => {
-                              getStationWithId(e._id);
-                            }}
-                          >
-                            <td className="c-table__cell text-center">
-                              {e.name}
-                            </td>
-                            <td className="c-table__cell text-center">
-                              {e.topic}
-                            </td>
-                            <td className="c-table__cell text-center">
-                              {e.status}
-                            </td>
-                            <td className="c-table__cell text-center">
-                              {e.location}
-                            </td>
-                            <td className="c-table__cell text-center">
-                              {e.devicePhoneNum}
-                            </td>
-                            <td className="c-table__cell text-center">
-                              <button
-                                className="btn-devices-edit"
-                                data-bs-toggle="modal"
-                                data-bs-target="#exampleModalLong"
-                              >
-                                <img
-                                  src="https://cdn-icons-png.flaticon.com/128/9458/9458280.png"
-                                  alt="update"
-                                  width="16"
-                                  height="16"
-                                />
-                              </button>
-                            </td>
-                            <td className="c-table__cell text-center">
-                              <button
-                                className="btn-devices-edit"
-                                data-bs-toggle="modal"
-                                data-bs-target="#staticBackdrop"
-                              >
-                                <img
-                                  src="https://cdn-icons-png.flaticon.com/128/9713/9713380.png"
-                                  alt="update"
-                                  width="16"
-                                  height="16"
-                                />
-                              </button>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
+                  <div className="table-scrol">
+                    <table className="c-table mt-4">
+                      <thead className="c-table__header">
+                        <tr>
+                          <th className="c-table__col-label text-center">
+                            Nomi
+                          </th>
+                          <th className="c-table__col-label text-center">
+                            Topic
+                          </th>
+                          <th className="c-table__col-label text-center">
+                            Status
+                          </th>
+                          <th className="c-table__col-label text-center">
+                            Lokatsiya
+                          </th>
+                          <th className="c-table__col-label text-center">
+                            Qurilma telefon raqami
+                          </th>
+                          <th className="c-table__col-label text-center">
+                            O'zgartirish
+                          </th>
+                          <th className="c-table__col-label text-center">
+                            O'chirish
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="c-table__body">
+                        {allStationByBalansOrg?.map((e, i) => {
+                          return (
+                            <tr
+                              className="fs-6 column-admin-station"
+                              key={i}
+                              data-bs-toggle="modal"
+                              data-bs-target="#exampleModal"
+                              onClick={() => {
+                                getStationWithId(e._id);
+                              }}
+                            >
+                              <td className="c-table__cell text-center">
+                                {e.name}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                {e.topic}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                {e.status}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                {e.location}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                {e.devicePhoneNum}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                <button
+                                  className="btn-devices-edit"
+                                  data-bs-toggle="modal"
+                                  data-bs-target="#exampleModalLong"
+                                >
+                                  <img
+                                    src="https://cdn-icons-png.flaticon.com/128/9458/9458280.png"
+                                    alt="update"
+                                    width="16"
+                                    height="16"
+                                  />
+                                </button>
+                              </td>
+                              <td className="c-table__cell text-center">
+                                <button
+                                  className="btn-devices-edit"
+                                  data-bs-toggle="modal"
+                                  data-bs-target="#staticBackdrop"
+                                >
+                                  <img
+                                    src="https://cdn-icons-png.flaticon.com/128/9713/9713380.png"
+                                    alt="update"
+                                    width="16"
+                                    height="16"
+                                  />
+                                </button>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
                 )}
               </div>
             </div>

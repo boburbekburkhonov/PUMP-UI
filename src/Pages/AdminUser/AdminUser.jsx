@@ -11,6 +11,7 @@ const AdminUser = () => {
   const [role, setRole] = useState([]);
   const [users, setUsers] = useState([]);
   const [allStations, setAllStations] = useState([]);
+  const [allRegions, setAllRegions] = useState([]);
   let [stationIndexForAttach, setStationIndexForAttach] = useState([]);
   const [count, setCount] = useState(0);
   const [userOneWithId, setUserOneWithId] = useState({});
@@ -20,15 +21,44 @@ const AdminUser = () => {
   const [changeRoleName, setChangeRoleName] = useState();
 
   useEffect(() => {
-    fetch(`${api}/roles/find-all`, {
-      method: "GET",
-      headers: {
-        "content-type": "application/json",
-        Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => setRole(data.data));
+    const findAllRoles = async () => {
+      const request = await fetch(`${api}/roles/find-all`, {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+        },
+      });
+
+      const response = await request.json();
+
+      if (response.statusCode == 401) {
+        const request = await fetch(`${api}/auth/signIn`, {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({
+            username: window.localStorage.getItem("username"),
+            password: window.localStorage.getItem("password"),
+          }),
+        });
+
+        const response = await request.json();
+
+        if (response.statusCode == 200) {
+          window.localStorage.setItem("accessToken", response.data.accessToken);
+          window.localStorage.setItem(
+            "refreshToken",
+            response.data.refreshToken
+          );
+        }
+      }
+
+      setRole(response.data);
+    };
+
+    findAllRoles();
   }, [count]);
 
   useEffect(() => {
@@ -46,20 +76,51 @@ const AdminUser = () => {
         }
       });
 
-    fetch(`${api}/stations/find-all`, {
-      method: "GET",
-      headers: {
-        "content-type": "application/json",
-        Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.statusCode == 200) {
-          setAllStations(data.data);
-        }
-      });
+    // fetch(`${api}/stations/find-all`, {
+    //   method: "GET",
+    //   headers: {
+    //     "content-type": "application/json",
+    //     Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+    //   },
+    // })
+    //   .then((res) => res.json())
+    //   .then((data) => {
+    //     if (data.statusCode == 200) {
+    //       setAllStations(data.data);
+    //     }
+    //   });
   }, [count]);
+
+  useEffect(() => {
+    const fetchStationByRegion = async () => {
+      const requestRegionAll = await fetch(`${api}/regions/all`, {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+        },
+      });
+      const responseRegionAll = await requestRegionAll.json();
+      setAllRegions(responseRegionAll.regions);
+
+      const request = await fetch(
+        `${api}/stations/find-by-regionNumber?regionNumber=${responseRegionAll.regions[0].id}`,
+        {
+          method: "GET",
+          headers: {
+            "content-type": "application/json",
+            Authorization:
+              "Bearer " + window.localStorage.getItem("accessToken"),
+          },
+        }
+      );
+
+      const response = await request.json();
+      setAllStations(response.data);
+    };
+
+    fetchStationByRegion();
+  }, []);
 
   // !USER CREATE
   const createUser = (e) => {
@@ -237,6 +298,20 @@ const AdminUser = () => {
     setRoleOneWithId(foundRole);
   };
 
+  //! SEARCH STATION BY REGION ID
+  const searchStationByReionId = (e) => {
+    fetch(`${api}/stations/find-by-regionNumber?regionNumber=${e}`, {
+      method: "GET",
+      headers: {
+        "content-type": "application/json",
+        Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => setAllStations(data.data));
+  };
+
+  //! ATTACH STATION USER
   const attachStation = (e) => {
     e.preventDefault();
 
@@ -264,6 +339,7 @@ const AdminUser = () => {
         }
       });
   };
+
   return (
     <HelmetProvider>
       <div>
@@ -589,42 +665,75 @@ const AdminUser = () => {
               </div>
               <div className="modal-body ">
                 <div className="d-flex justify-content-between">
-                  <div className="attach-form-wrapper">
-                    <h4>Stansiyalar</h4>
-                    <form onSubmit={attachStation}>
-                      {allStations?.map((e, i) => {
-                        return (
-                          <div
-                            key={i}
-                            className="df-flex align-items-center mb-3"
-                          >
-                            <input
-                              className="attach-input"
-                              type="checkbox"
-                              id={e._id}
-                              name="attachStationValue"
-                              value={e._id}
-                              onChange={() => {
-                                if (!stationIndexForAttach.includes(i)) {
-                                  stationIndexForAttach.push(i);
-                                } else if (stationIndexForAttach.includes(i)) {
-                                  stationIndexForAttach =
-                                    stationIndexForAttach?.filter(
-                                      (e) => e != i
-                                    );
-                                }
-                                setStationIndexForAttach(stationIndexForAttach);
-                              }}
-                            />
-                            <label className="attach-label" htmlFor={e._id}>
-                              {e.name}
-                            </label>
-                          </div>
-                        );
-                      })}
-
-                      <button className="btn btn-primary">Biriktirish</button>
+                  <div>
+                    <form className="attach-user-region-wrapper">
+                      <div className="search-region">
+                        <label
+                          htmlFor="region-select"
+                          className="search-label-region mb-2"
+                        >
+                          Viloyat
+                        </label>
+                        <select
+                          className="form-select"
+                          name="nameOrImeiSelect"
+                          required
+                          onChange={(e) =>
+                            searchStationByReionId(e.target.value)
+                          }
+                        >
+                          {allRegions?.map((e, i) => {
+                            return (
+                              <option value={e.id} key={i}>
+                                {e.name}
+                              </option>
+                            );
+                          })}
+                        </select>
+                      </div>
                     </form>
+                    <div className="attach-form-wrapper">
+                      {/* <h4>Stansiyalar</h4> */}
+
+                      <form onSubmit={attachStation}>
+                        {allStations?.map((e, i) => {
+                          return (
+                            <div
+                              key={i}
+                              className="d-flex align-items-center mb-3"
+                            >
+                              <input
+                                className="attach-input"
+                                type="checkbox"
+                                id={e._id}
+                                name="attachStationValue"
+                                value={e._id}
+                                onChange={() => {
+                                  if (!stationIndexForAttach.includes(i)) {
+                                    stationIndexForAttach.push(i);
+                                  } else if (
+                                    stationIndexForAttach.includes(i)
+                                  ) {
+                                    stationIndexForAttach =
+                                      stationIndexForAttach?.filter(
+                                        (e) => e != i
+                                      );
+                                  }
+                                  setStationIndexForAttach(
+                                    stationIndexForAttach
+                                  );
+                                }}
+                              />
+                              <label className="attach-label" htmlFor={e._id}>
+                                {e.name}
+                              </label>
+                            </div>
+                          );
+                        })}
+
+                        <button className="btn btn-primary">Biriktirish</button>
+                      </form>
+                    </div>
                   </div>
 
                   <div>
@@ -696,85 +805,87 @@ const AdminUser = () => {
                 className="tab-pane fade show active profile-users"
                 id="profile-users"
               >
-                <table className="c-table mt-4">
-                  <thead className="c-table__header">
-                    <tr>
-                      <th className="c-table__col-label text-center">Ism</th>
-                      <th className="c-table__col-label text-center">
-                        Familiya
-                      </th>
-                      <th className="c-table__col-label text-center">
-                        Username
-                      </th>
-                      <th className="c-table__col-label text-center">
-                        Telefon raqam
-                      </th>
-                      <th className="c-table__col-label text-center">Role</th>
-                      <th className="c-table__col-label text-center">
-                        O'zgartirish
-                      </th>
-                      <th className="c-table__col-label text-center">
-                        O'chirish
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="c-table__body">
-                    {users?.map((e, i) => {
-                      return (
-                        <tr className="fs-6" key={i}>
-                          <td className="c-table__cell text-center">
-                            {e.firstName}
-                          </td>
-                          <td className="c-table__cell text-center">
-                            {e.lastName}
-                          </td>
-                          <td className="c-table__cell text-center">
-                            {e.username}
-                          </td>
-                          <td className="c-table__cell text-center">
-                            {e.phoneNumber}
-                          </td>
-                          <td className="c-table__cell text-center">
-                            {e.role}
-                          </td>
-                          <td className="c-table__cell text-center">
-                            <button
-                              className="btn-devices-edit"
-                              data-bs-toggle="modal"
-                              data-bs-target="#exampleModal"
-                              onClick={() => {
-                                setChangeUserId(e._id);
-                                getUserWithId(e._id);
-                              }}
-                            >
-                              <img
-                                src="https://cdn-icons-png.flaticon.com/128/9458/9458280.png"
-                                alt="update"
-                                width="16"
-                                height="16"
-                              />
-                            </button>
-                          </td>
-                          <td className="c-table__cell text-center">
-                            <button
-                              className="btn-devices-edit"
-                              data-bs-toggle="modal"
-                              data-bs-target="#staticBackdrop"
-                              onClick={() => setChangeUserId(e._id)}
-                            >
-                              <img
-                                src="https://cdn-icons-png.flaticon.com/128/9713/9713380.png"
-                                alt="update"
-                                width="16"
-                                height="16"
-                              />
-                            </button>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
+                <div className="table-scrol">
+                  <table className="c-table mt-4">
+                    <thead className="c-table__header">
+                      <tr>
+                        <th className="c-table__col-label text-center">Ism</th>
+                        <th className="c-table__col-label text-center">
+                          Familiya
+                        </th>
+                        <th className="c-table__col-label text-center">
+                          Username
+                        </th>
+                        <th className="c-table__col-label text-center">
+                          Telefon raqam
+                        </th>
+                        <th className="c-table__col-label text-center">Role</th>
+                        <th className="c-table__col-label text-center">
+                          O'zgartirish
+                        </th>
+                        <th className="c-table__col-label text-center">
+                          O'chirish
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="c-table__body">
+                      {users?.map((e, i) => {
+                        return (
+                          <tr className="fs-6" key={i}>
+                            <td className="c-table__cell text-center">
+                              {e.firstName}
+                            </td>
+                            <td className="c-table__cell text-center">
+                              {e.lastName}
+                            </td>
+                            <td className="c-table__cell text-center">
+                              {e.username}
+                            </td>
+                            <td className="c-table__cell text-center">
+                              {e.phoneNumber}
+                            </td>
+                            <td className="c-table__cell text-center">
+                              {e.role}
+                            </td>
+                            <td className="c-table__cell text-center">
+                              <button
+                                className="btn-devices-edit"
+                                data-bs-toggle="modal"
+                                data-bs-target="#exampleModal"
+                                onClick={() => {
+                                  setChangeUserId(e._id);
+                                  getUserWithId(e._id);
+                                }}
+                              >
+                                <img
+                                  src="https://cdn-icons-png.flaticon.com/128/9458/9458280.png"
+                                  alt="update"
+                                  width="16"
+                                  height="16"
+                                />
+                              </button>
+                            </td>
+                            <td className="c-table__cell text-center">
+                              <button
+                                className="btn-devices-edit"
+                                data-bs-toggle="modal"
+                                data-bs-target="#staticBackdrop"
+                                onClick={() => setChangeUserId(e._id)}
+                              >
+                                <img
+                                  src="https://cdn-icons-png.flaticon.com/128/9713/9713380.png"
+                                  alt="update"
+                                  width="16"
+                                  height="16"
+                                />
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
               </div>
 
               <div
@@ -1005,66 +1116,72 @@ const AdminUser = () => {
 
               <div className="tab-pane fade station-add pt-3" id="station-add">
                 <div className="d-flex align-items-start justify-content-between flex-wrap role-create-list-wrapper">
-                  <table className="c-table mt-4">
-                    <thead className="c-table__header">
-                      <tr>
-                        <th className="c-table__col-label text-center">Ism</th>
-                        <th className="c-table__col-label text-center">
-                          Familiya
-                        </th>
-                        <th className="c-table__col-label text-center">
-                          Username
-                        </th>
-                        <th className="c-table__col-label text-center">
-                          Telefon raqam
-                        </th>
-                        <th className="c-table__col-label text-center">Role</th>
-                        <th className="c-table__col-label text-center">
-                          Biriktirish
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="c-table__body">
-                      {users?.map((e, i) => {
-                        return (
-                          <tr className="fs-6" key={i}>
-                            <td className="c-table__cell text-center">
-                              {e.firstName}
-                            </td>
-                            <td className="c-table__cell text-center">
-                              {e.lastName}
-                            </td>
-                            <td className="c-table__cell text-center">
-                              {e.username}
-                            </td>
-                            <td className="c-table__cell text-center">
-                              {e.phoneNumber}
-                            </td>
-                            <td className="c-table__cell text-center">
-                              {e.role}
-                            </td>
-                            <td className="c-table__cell text-center">
-                              <button
-                                className="btn-devices-edit"
-                                data-bs-toggle="modal"
-                                data-bs-target="#exampleModalAttach"
-                                onClick={() => {
-                                  setChangeUserId(e._id);
-                                }}
-                              >
-                                <img
-                                  src={attach}
-                                  alt="update"
-                                  width="20"
-                                  height="20"
-                                />
-                              </button>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
+                  <div className="table-scrol w-100">
+                    <table className="c-table mt-4">
+                      <thead className="c-table__header">
+                        <tr>
+                          <th className="c-table__col-label text-center">
+                            Ism
+                          </th>
+                          <th className="c-table__col-label text-center">
+                            Familiya
+                          </th>
+                          <th className="c-table__col-label text-center">
+                            Username
+                          </th>
+                          <th className="c-table__col-label text-center">
+                            Telefon raqam
+                          </th>
+                          <th className="c-table__col-label text-center">
+                            Role
+                          </th>
+                          <th className="c-table__col-label text-center">
+                            Biriktirish
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="c-table__body">
+                        {users?.map((e, i) => {
+                          return (
+                            <tr className="fs-6" key={i}>
+                              <td className="c-table__cell text-center">
+                                {e.firstName}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                {e.lastName}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                {e.username}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                {e.phoneNumber}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                {e.role}
+                              </td>
+                              <td className="c-table__cell text-center">
+                                <button
+                                  className="btn-devices-edit"
+                                  data-bs-toggle="modal"
+                                  data-bs-target="#exampleModalAttach"
+                                  onClick={() => {
+                                    setChangeUserId(e._id);
+                                  }}
+                                >
+                                  <img
+                                    src={attach}
+                                    alt="update"
+                                    width="20"
+                                    height="20"
+                                  />
+                                </button>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
