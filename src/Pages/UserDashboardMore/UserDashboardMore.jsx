@@ -741,7 +741,7 @@ const UserDashboardMore = (props) => {
                 {stationOtherWorking?.length > 0 ? (
                   <div className="table-scrol">
                     <table className="c-table mt-4">
-                      <thead className="c-table__header c-table__header-notworking">
+                      <thead className="c-table__header c-table__header-others">
                         <tr>
                           <th className="c-table__col-label text-center">
                             Nomi

@@ -107,6 +107,7 @@ export default function Home() {
   };
 
   const zoomLocation = (station) => {
+    console.log(station);
     setOneLastData([station]);
     setCount(count + 1);
     const lat = Number(station.location.split("-")[0]);
@@ -419,7 +420,7 @@ export default function Home() {
                           ? locationYellow
                           : checkStationWorkingOrNot(e.lastData) == 404
                           ? locationRed
-                          : null
+                          : locationRed
                       }
                       alt="circleBlue"
                       width={25}
