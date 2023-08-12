@@ -16,8 +16,10 @@ import locationYellow from "../../assets/images/location-yellow.png";
 
 const AdminMap = () => {
   const [lastData, setLastData] = useState([]);
+  const [oneLastData, setOneLastData] = useState([]);
   const [count, setCount] = useState(1);
   const [zoom, setZoom] = useState(6);
+  const [active, setActive] = useState(-1);
   const [location, setLocation] = useState({
     lat: 42.00000000048624,
     lng: 63.999999999999986,
@@ -67,7 +69,7 @@ const AdminMap = () => {
     };
 
     userMap();
-  }, [count]);
+  }, []);
 
   const handleActiveMarker = (marker) => {
     if (marker === activeMarker) {
@@ -104,16 +106,16 @@ const AdminMap = () => {
     }
   };
 
-  const zoomLocation = (location) => {
-    const lat = Number(location.split("-")[0]);
-    const lng = Number(location.split("-")[1]);
+  const zoomLocation = (station) => {
+    setOneLastData([station]);
+    setCount(count + 1);
+    const lat = Number(station.location.split("-")[0]);
+    const lng = Number(station.location.split("-")[1]);
     setLocation({ lat: lat, lng: lng });
     setZoom(14);
-    setCount(count + 1);
   };
 
   if (!isLoaded) return <div>Loading...</div>;
-
   return (
     <div>
       <div className="card">
@@ -124,6 +126,138 @@ const AdminMap = () => {
             mapContainerClassName="map-container"
           >
             {lastData?.map((e, i) => {
+              return (
+                <MarkerF
+                  key={i}
+                  position={{
+                    lat: Number(e.location.split("-")[0]),
+                    lng: Number(e.location.split("-")[1]),
+                  }}
+                  title={e.name}
+                  onClick={() => handleActiveMarker(e._id)}
+                >
+                  {activeMarker == e._id ? (
+                    <InfoWindowF
+                      className="w-100"
+                      onCloseClick={() => {
+                        setActiveMarker(null);
+                      }}
+                      options={{ maxWidth: "240" }}
+                    >
+                      {e.lastData != undefined ? (
+                        <div>
+                          <h3 className="fw-semibold text-success fs-6">
+                            {e.name}
+                          </h3>
+
+                          <div className="d-flex align-items-center mb-1">
+                            <img
+                              src={circleBlue}
+                              alt="circleBlue"
+                              width={12}
+                              height={12}
+                            />
+                            <p className="infowindow-desc m-0 ms-1 me-1">
+                              Musbat oqim:
+                            </p>{" "}
+                            <span className="infowindow-span">
+                              {e.lastData.positiveFlow} m3
+                            </span>
+                          </div>
+
+                          <div className="d-flex align-items-center mb-1">
+                            <img
+                              src={circleBlue}
+                              alt="circleBlue"
+                              width={12}
+                              height={12}
+                            />
+                            <p className="m-0 infowindow-desc ms-1 me-1 ">
+                              Jami oqim:
+                            </p>{" "}
+                            <span className="infowindow-span">
+                              {e.lastData.totalsFlow} m3
+                            </span>
+                          </div>
+
+                          <div className="d-flex align-items-center mb-1">
+                            <img
+                              src={circleBlue}
+                              alt="circleBlue"
+                              width={12}
+                              height={12}
+                            />
+                            <p className="m-0 infowindow-desc ms-1 me-1 ">
+                              Oqim tezligi:
+                            </p>{" "}
+                            <span className="infowindow-span">
+                              {e.lastData.flowRate} m3/s
+                            </span>
+                          </div>
+
+                          <div className="d-flex align-items-center mb-1">
+                            <img
+                              src={circleBlue}
+                              alt="circleBlue"
+                              width={12}
+                              height={12}
+                            />
+                            <p className="m-0 infowindow-desc ms-1 me-1">
+                              Tezlik:
+                            </p>{" "}
+                            <span className="infowindow-span">
+                              {e.lastData.velocity} m/s
+                            </span>
+                          </div>
+
+                          <div className="d-flex align-items-center">
+                            <img
+                              src={circleBlue}
+                              alt="circleBlue"
+                              width={12}
+                              height={12}
+                            />
+                            <p className="m-0 infowindow-desc ms-1 me-1">
+                              Sana:
+                            </p>{" "}
+                            <span className="infowindow-span">
+                              {e.lastData.date.split("-")[0]}/
+                              {e.lastData.date.split("-")[1]}/
+                              {e.lastData.date.split("-")[2].slice(0, 2)}{" "}
+                              {e.lastData.date.split("T")[1].split(":")[0]}:
+                              {e.lastData.date.split("T")[1].split(":")[1]}:
+                              {e.lastData.date
+                                .split("T")[1]
+                                .split(":")[2]
+                                .slice(0, 2)}
+                            </span>
+                          </div>
+                        </div>
+                      ) : (
+                        <div>
+                          <h3 className="fw-semibold text-success fs-6 text-center">
+                            {e.name}
+                          </h3>
+                          <div className="d-flex align-items-center justify-content-center">
+                            <img
+                              src={circleRed}
+                              alt="circleBlue"
+                              width={18}
+                              height={18}
+                            />
+                            <p className="m-0 infowindow-desc-not-last-data fs-6 ms-1 me-1 ">
+                              Ma'lumot kelmagan...
+                            </p>
+                          </div>{" "}
+                        </div>
+                      )}
+                    </InfoWindowF>
+                  ) : null}
+                </MarkerF>
+              );
+            })}
+
+            {oneLastData?.map((e, i) => {
               return (
                 <MarkerF
                   key={i}
@@ -268,9 +402,14 @@ const AdminMap = () => {
               {lastData?.map((e, i) => {
                 return (
                   <li
-                    className="list-group-item list-group-item-action d-flex align-items-center"
+                    className={`list-group-item list-group-item-action d-flex align-items-center ${
+                      active == i ? "active-user-map" : ""
+                    }`}
                     key={i}
-                    onClick={() => zoomLocation(e.location)}
+                    onClick={() => {
+                      setActive(i);
+                      zoomLocation(e);
+                    }}
                   >
                     <img
                       src={

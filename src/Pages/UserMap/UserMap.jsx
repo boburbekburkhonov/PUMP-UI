@@ -107,7 +107,6 @@ export default function Home() {
   };
 
   const zoomLocation = (station) => {
-    console.log(station);
     setOneLastData([station]);
     setCount(count + 1);
     const lat = Number(station.location.split("-")[0]);
