@@ -7,6 +7,7 @@ import close from "../../assets/images/close.png";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import excelImage from "../../assets/images/excel.png";
 import excelFileImage from "../../assets/images/excel-file.png";
+import { ToastContainer, toast } from "react-toastify";
 
 const AdminStation = () => {
   const [allStation, setAllStation] = useState([]);
@@ -203,9 +204,11 @@ const AdminStation = () => {
     })
       .then((res) => res.json())
       .then((data) => {
+        console.log(data);
         if (data.statusCode == 200) {
           window.location.reload();
-          toast.success("Stansiya muvaffaqqiyatli yaratildi!");
+        } else {
+          toast.error(data.message);
         }
       });
 
@@ -332,7 +335,6 @@ const AdminStation = () => {
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log(data);
           setAllStation([data.data]);
         });
     } else if (nameOrImeiSelect.value == "all") {
@@ -897,6 +899,19 @@ const AdminStation = () => {
             </div>
           </div>
         </div>
+
+        {/* ToastContainer */}
+        <ToastContainer
+          position="top-center"
+          autoClose={1000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
 
         <div className="card">
           <div className="card-body pt-3">

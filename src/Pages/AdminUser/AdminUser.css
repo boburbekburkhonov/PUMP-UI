@@ -295,7 +295,7 @@ th {
 }
 
 .modal-header-permission {
-  background: #9b3329 !important;
+  background: #ff2d2d !important;
 }
 
 .btn-light {
@@ -415,4 +415,28 @@ th {
   padding: 10px 20px;
   border-radius: 10px;
   margin-bottom: 40px;
+}
+
+.user-attach-station-wrapper {
+  max-height: 58vh;
+  overflow: auto;
+}
+
+.user-attach-station-border {
+  display: inline-block;
+  width: 2px;
+  height: 64vh;
+  background: dodgerblue;
+}
+
+@media (max-width : 700px) {
+
+  .wrapper-attach {
+    justify-content: center !important;
+  }
+
+  .user-station-attach {
+    margin-top: 50px;
+  }
+
 }

@@ -11,6 +11,9 @@ const AdminUser = () => {
   const [role, setRole] = useState([]);
   const [users, setUsers] = useState([]);
   const [allStations, setAllStations] = useState([]);
+  const [allStationsForUser, setAllStationsForUser] = useState([]);
+  const [allUserStations, setAllUserStations] = useState([]);
+  const [userStationsIdList, setUserStationsIdList] = useState([]);
   const [allRegions, setAllRegions] = useState([]);
   let [stationIndexForAttach, setStationIndexForAttach] = useState([]);
   const [count, setCount] = useState(0);
@@ -76,19 +79,19 @@ const AdminUser = () => {
         }
       });
 
-    // fetch(`${api}/stations/find-all`, {
-    //   method: "GET",
-    //   headers: {
-    //     "content-type": "application/json",
-    //     Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
-    //   },
-    // })
-    //   .then((res) => res.json())
-    //   .then((data) => {
-    //     if (data.statusCode == 200) {
-    //       setAllStations(data.data);
-    //     }
-    //   });
+    fetch(`${api}/stations/find-all`, {
+      method: "GET",
+      headers: {
+        "content-type": "application/json",
+        Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.statusCode == 200) {
+          setAllStationsForUser(data.data);
+        }
+      });
   }, [count]);
 
   useEffect(() => {
@@ -311,33 +314,127 @@ const AdminUser = () => {
       .then((data) => setAllStations(data.data));
   };
 
+  //! USER ATTACH STATIONS
+  const getUserAttachStation = (userId) => {
+    const userAttachStations = async () => {
+      try {
+        const request = await fetch(
+          `${api}/user-join-stations/getByUserId?id=${userId}`,
+          {
+            method: "GET",
+            headers: {
+              "content-type": "application/json",
+              Authorization:
+                "Bearer " + window.localStorage.getItem("accessToken"),
+            },
+          }
+        );
+
+        const response = await request.json();
+        setUserStationsIdList(response.data.stationsIdList);
+        if (response.statusCode == 200) {
+          let resultUserStation = [];
+          response.data.stationsIdList.forEach((e) => {
+            allStationsForUser.forEach((s) => {
+              if (s._id == e) {
+                resultUserStation.push(s);
+              }
+            });
+          });
+          resultUserStation.sort((a, b) => {
+            if (a.name < b.name) {
+              return -1;
+            }
+            if (a.name > b.name) {
+              return 1;
+            }
+            return 0;
+          });
+
+          setAllUserStations(resultUserStation);
+        }
+      } catch (err) {
+        setAllUserStations([]);
+      }
+    };
+
+    userAttachStations();
+  };
+
   //! ATTACH STATION USER
   const attachStation = (e) => {
     e.preventDefault();
 
     const { attachStationValue } = e.target;
-    let stationIdList = [];
-    stationIndexForAttach.forEach((e) => {
-      stationIdList.push(attachStationValue[e].value);
-    });
 
-    fetch(`${api}/user-join-stations/create`, {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
-      },
-      body: JSON.stringify({
-        userId: changeUserId,
-        stationsIdList: stationIdList,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.statusCode == 200) {
-          window.location.reload();
-        }
+    if (allUserStations.length == 0) {
+      let stationIdList = [];
+      stationIndexForAttach.forEach((e) => {
+        stationIdList.push(attachStationValue[e].value);
       });
+
+      fetch(`${api}/user-join-stations/create`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+        },
+        body: JSON.stringify({
+          userId: changeUserId,
+          stationsIdList: stationIdList,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.statusCode == 200) {
+            window.location.reload();
+          }
+        });
+    } else if (allUserStations.length > 0) {
+      const userAttachStations = async () => {
+        const request = await fetch(
+          `${api}/user-join-stations/getByUserId?id=${changeUserId}`,
+          {
+            method: "GET",
+            headers: {
+              "content-type": "application/json",
+              Authorization:
+                "Bearer " + window.localStorage.getItem("accessToken"),
+            },
+          }
+        );
+
+        const response = await request.json();
+
+        stationIndexForAttach.forEach((e) => {
+          if (!userStationsIdList.includes(attachStationValue[e].value)) {
+            userStationsIdList.push(attachStationValue[e].value);
+          }
+        });
+
+        fetch(`${api}/user-join-stations/update`, {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+            Authorization:
+              "Bearer " + window.localStorage.getItem("accessToken"),
+          },
+          body: JSON.stringify({
+            id: response.data._id,
+            userId: changeUserId,
+            stationsIdList: userStationsIdList,
+          }),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.statusCode == 200) {
+              window.location.reload();
+            }
+          });
+      };
+
+      userAttachStations();
+    }
   };
 
   return (
@@ -663,8 +760,8 @@ const AdminUser = () => {
                   aria-label="Close"
                 ></button>
               </div>
-              <div className="modal-body ">
-                <div className="d-flex justify-content-between">
+              <div className="modal-body">
+                <div className="wrapper-attach d-flex justify-content-between flex-wrap">
                   <div>
                     <form className="attach-user-region-wrapper">
                       <div className="search-region">
@@ -693,8 +790,6 @@ const AdminUser = () => {
                       </div>
                     </form>
                     <div className="attach-form-wrapper">
-                      {/* <h4>Stansiyalar</h4> */}
-
                       <form onSubmit={attachStation}>
                         {allStations?.map((e, i) => {
                           return (
@@ -736,8 +831,22 @@ const AdminUser = () => {
                     </div>
                   </div>
 
-                  <div>
-                    <h4>Foydalanuvchiga tegishli stansiyalar</h4>
+                  <span className="user-attach-station-border"></span>
+
+                  <div className="user-station-attach">
+                    <h4 className="mb-3 text-primary">
+                      Foydalanuvchiga tegishli stansiyalar
+                    </h4>
+
+                    <ol className="user-attach-station-wrapper m-0 list-group list-group-numbered">
+                      {allUserStations?.map((e, i) => {
+                        return (
+                          <li key={i} className="list-group-item">
+                            {e.name}
+                          </li>
+                        );
+                      })}
+                    </ol>
                   </div>
                 </div>
               </div>
@@ -1166,6 +1275,7 @@ const AdminUser = () => {
                                   data-bs-target="#exampleModalAttach"
                                   onClick={() => {
                                     setChangeUserId(e._id);
+                                    getUserAttachStation(e._id);
                                   }}
                                 >
                                   <img
