@@ -17,6 +17,7 @@ import locationOrange from "../../assets/images/location-orange.png";
 
 const AdminMap = () => {
   const [lastData, setLastData] = useState([]);
+  const [lastDataForList, setLastDataForList] = useState([]);
   const [oneLastData, setOneLastData] = useState([]);
   const [count, setCount] = useState(1);
   const [zoom, setZoom] = useState(6);
@@ -44,6 +45,7 @@ const AdminMap = () => {
 
       const response = await request.json();
       setLastData(response.data);
+      setLastDataForList(response.data);
 
       if (response.statusCode == 401) {
         const request = await fetch(`${api}/auth/signIn`, {
@@ -105,6 +107,14 @@ const AdminMap = () => {
     ) {
       return 1;
     }
+  };
+
+  const changeDataWithInput = (inputValue) => {
+    const search = lastData.filter((e) =>
+      e.name.toLowerCase().includes(inputValue)
+    );
+    setLastDataForList(search);
+    setActive(null);
   };
 
   const zoomLocation = (station) => {
@@ -399,8 +409,19 @@ const AdminMap = () => {
               </span>{" "}
               ta
             </h5>
+            <div className="admin-map-search">
+              <h5 className="text-primary">Qidiruv</h5>
+              <input
+                onChange={(e) =>
+                  changeDataWithInput(e.target.value.toLowerCase())
+                }
+                type="text"
+                className="form-control"
+                placeholder="search..."
+              />
+            </div>
             <ul className="list-group list-unstyled m-0">
-              {lastData?.map((e, i) => {
+              {lastDataForList?.map((e, i) => {
                 return (
                   <li
                     className={`list-group-item list-group-item-action d-flex align-items-center ${

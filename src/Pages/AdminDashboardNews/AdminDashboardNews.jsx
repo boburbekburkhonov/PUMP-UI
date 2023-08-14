@@ -32,13 +32,7 @@ const AdminDashboardNews = (props) => {
                 height={35}
               />
               <h3 className="dashboard-heading m-0 ms-2 text-primary">
-                {
-                  allBalansOrg.find((e) => {
-                    if (e.id == allStation[0]?.balance_organization_id) {
-                      return e;
-                    }
-                  })?.name
-                }
+                Smart Solutions System tomonidan o'rnatilgan qurilmalar
               </h3>
             </div>
 
