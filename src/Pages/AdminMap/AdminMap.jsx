@@ -5,6 +5,7 @@ import {
   useLoadScript,
   MarkerF,
   InfoWindowF,
+  MarkerClusterer,
 } from "@react-google-maps/api";
 import "./AdminMap.css";
 import { api } from "../API/Api.global";
@@ -136,137 +137,154 @@ const AdminMap = () => {
             center={center}
             mapContainerClassName="map-container"
           >
-            {lastData?.map((e, i) => {
-              return (
-                <MarkerF
-                  key={i}
-                  position={{
-                    lat: Number(e.location.split("-")[0]),
-                    lng: Number(e.location.split("-")[1]),
-                  }}
-                  title={e.name}
-                  onClick={() => handleActiveMarker(e._id)}
-                >
-                  {activeMarker == e._id ? (
-                    <InfoWindowF
-                      className="w-100"
-                      onCloseClick={() => {
-                        setActiveMarker(null);
-                      }}
-                      options={{ maxWidth: "240" }}
-                    >
-                      {e.lastData != undefined ? (
-                        <div>
-                          <h3 className="fw-semibold text-success fs-6">
-                            {e.name}
-                          </h3>
+            {lastData?.length > 0 && (
+              <MarkerClusterer>
+                {(clusterer) =>
+                  lastData?.map((e, i) => {
+                    return (
+                      <MarkerF
+                        clusterer={clusterer}
+                        key={i}
+                        position={{
+                          lat: Number(e.location.split("-")[0]),
+                          lng: Number(e.location.split("-")[1]),
+                        }}
+                        title={e.name}
+                        onClick={() => handleActiveMarker(e._id)}
+                      >
+                        {activeMarker == e._id ? (
+                          <InfoWindowF
+                            className="w-100"
+                            onCloseClick={() => {
+                              setActiveMarker(null);
+                            }}
+                            options={{ maxWidth: "240" }}
+                          >
+                            {e.lastData != undefined ? (
+                              <div>
+                                <h3 className="fw-semibold text-success fs-6">
+                                  {e.name}
+                                </h3>
 
-                          <div className="d-flex align-items-center mb-1">
-                            <img
-                              src={circleBlue}
-                              alt="circleBlue"
-                              width={12}
-                              height={12}
-                            />
-                            <p className="infowindow-desc m-0 ms-1 me-1">
-                              Musbat oqim:
-                            </p>{" "}
-                            <span className="infowindow-span">
-                              {e.lastData.positiveFlow} m3
-                            </span>
-                          </div>
+                                <div className="d-flex align-items-center mb-1">
+                                  <img
+                                    src={circleBlue}
+                                    alt="circleBlue"
+                                    width={12}
+                                    height={12}
+                                  />
+                                  <p className="infowindow-desc m-0 ms-1 me-1">
+                                    Musbat oqim:
+                                  </p>{" "}
+                                  <span className="infowindow-span">
+                                    {e.lastData.positiveFlow} m3
+                                  </span>
+                                </div>
 
-                          <div className="d-flex align-items-center mb-1">
-                            <img
-                              src={circleBlue}
-                              alt="circleBlue"
-                              width={12}
-                              height={12}
-                            />
-                            <p className="m-0 infowindow-desc ms-1 me-1 ">
-                              Jami oqim:
-                            </p>{" "}
-                            <span className="infowindow-span">
-                              {e.lastData.totalsFlow} m3
-                            </span>
-                          </div>
+                                <div className="d-flex align-items-center mb-1">
+                                  <img
+                                    src={circleBlue}
+                                    alt="circleBlue"
+                                    width={12}
+                                    height={12}
+                                  />
+                                  <p className="m-0 infowindow-desc ms-1 me-1 ">
+                                    Jami oqim:
+                                  </p>{" "}
+                                  <span className="infowindow-span">
+                                    {e.lastData.totalsFlow} m3
+                                  </span>
+                                </div>
 
-                          <div className="d-flex align-items-center mb-1">
-                            <img
-                              src={circleBlue}
-                              alt="circleBlue"
-                              width={12}
-                              height={12}
-                            />
-                            <p className="m-0 infowindow-desc ms-1 me-1 ">
-                              Oqim tezligi:
-                            </p>{" "}
-                            <span className="infowindow-span">
-                              {e.lastData.flowRate} m3/s
-                            </span>
-                          </div>
+                                <div className="d-flex align-items-center mb-1">
+                                  <img
+                                    src={circleBlue}
+                                    alt="circleBlue"
+                                    width={12}
+                                    height={12}
+                                  />
+                                  <p className="m-0 infowindow-desc ms-1 me-1 ">
+                                    Oqim tezligi:
+                                  </p>{" "}
+                                  <span className="infowindow-span">
+                                    {e.lastData.flowRate} m3/s
+                                  </span>
+                                </div>
 
-                          <div className="d-flex align-items-center mb-1">
-                            <img
-                              src={circleBlue}
-                              alt="circleBlue"
-                              width={12}
-                              height={12}
-                            />
-                            <p className="m-0 infowindow-desc ms-1 me-1">
-                              Tezlik:
-                            </p>{" "}
-                            <span className="infowindow-span">
-                              {e.lastData.velocity} m/s
-                            </span>
-                          </div>
+                                <div className="d-flex align-items-center mb-1">
+                                  <img
+                                    src={circleBlue}
+                                    alt="circleBlue"
+                                    width={12}
+                                    height={12}
+                                  />
+                                  <p className="m-0 infowindow-desc ms-1 me-1">
+                                    Tezlik:
+                                  </p>{" "}
+                                  <span className="infowindow-span">
+                                    {e.lastData.velocity} m/s
+                                  </span>
+                                </div>
 
-                          <div className="d-flex align-items-center">
-                            <img
-                              src={circleBlue}
-                              alt="circleBlue"
-                              width={12}
-                              height={12}
-                            />
-                            <p className="m-0 infowindow-desc ms-1 me-1">
-                              Sana:
-                            </p>{" "}
-                            <span className="infowindow-span">
-                              {e.lastData.date.split("-")[0]}/
-                              {e.lastData.date.split("-")[1]}/
-                              {e.lastData.date.split("-")[2].slice(0, 2)}{" "}
-                              {e.lastData.date.split("T")[1].split(":")[0]}:
-                              {e.lastData.date.split("T")[1].split(":")[1]}:
-                              {e.lastData.date
-                                .split("T")[1]
-                                .split(":")[2]
-                                .slice(0, 2)}
-                            </span>
-                          </div>
-                        </div>
-                      ) : (
-                        <div>
-                          <h3 className="fw-semibold text-success fs-6 text-center">
-                            {e.name}
-                          </h3>
-                          <div className="d-flex align-items-center justify-content-center">
-                            <img
-                              src={circleRed}
-                              alt="circleBlue"
-                              width={18}
-                              height={18}
-                            />
-                            <p className="m-0 infowindow-desc-not-last-data fs-6 ms-1 me-1 ">
-                              Ma'lumot kelmagan...
-                            </p>
-                          </div>{" "}
-                        </div>
-                      )}
-                    </InfoWindowF>
-                  ) : null}
-                </MarkerF>
-              );
-            })}
+                                <div className="d-flex align-items-center">
+                                  <img
+                                    src={circleBlue}
+                                    alt="circleBlue"
+                                    width={12}
+                                    height={12}
+                                  />
+                                  <p className="m-0 infowindow-desc ms-1 me-1">
+                                    Sana:
+                                  </p>{" "}
+                                  <span className="infowindow-span">
+                                    {e.lastData.date.split("-")[0]}/
+                                    {e.lastData.date.split("-")[1]}/
+                                    {e.lastData.date.split("-")[2].slice(0, 2)}{" "}
+                                    {
+                                      e.lastData.date
+                                        .split("T")[1]
+                                        .split(":")[0]
+                                    }
+                                    :
+                                    {
+                                      e.lastData.date
+                                        .split("T")[1]
+                                        .split(":")[1]
+                                    }
+                                    :
+                                    {e.lastData.date
+                                      .split("T")[1]
+                                      .split(":")[2]
+                                      .slice(0, 2)}
+                                  </span>
+                                </div>
+                              </div>
+                            ) : (
+                              <div>
+                                <h3 className="fw-semibold text-success fs-6 text-center">
+                                  {e.name}
+                                </h3>
+                                <div className="d-flex align-items-center justify-content-center">
+                                  <img
+                                    src={circleRed}
+                                    alt="circleBlue"
+                                    width={18}
+                                    height={18}
+                                  />
+                                  <p className="m-0 infowindow-desc-not-last-data fs-6 ms-1 me-1 ">
+                                    Ma'lumot kelmagan...
+                                  </p>
+                                </div>{" "}
+                              </div>
+                            )}
+                          </InfoWindowF>
+                        ) : null}
+                      </MarkerF>
+                    );
+                  })
+                }
+              </MarkerClusterer>
+            )}
 
             {oneLastData?.map((e, i) => {
               return (
