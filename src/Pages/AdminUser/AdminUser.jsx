@@ -17,6 +17,7 @@ const AdminUser = () => {
   const [allRegions, setAllRegions] = useState([]);
   let [stationIndexForAttach, setStationIndexForAttach] = useState([]);
   const [count, setCount] = useState(0);
+  const [countForRegion, setCountForRegion] = useState(0);
   const [userOneWithId, setUserOneWithId] = useState({});
   const [roleOneWithId, setRoleOneWithId] = useState({});
   const [changeUserId, setChangeUserId] = useState();
@@ -96,6 +97,7 @@ const AdminUser = () => {
 
   useEffect(() => {
     const fetchStationByRegion = async () => {
+      setAllRegions([]);
       const requestRegionAll = await fetch(`${api}/regions/all`, {
         method: "GET",
         headers: {
@@ -123,7 +125,7 @@ const AdminUser = () => {
     };
 
     fetchStationByRegion();
-  }, []);
+  }, [countForRegion]);
 
   // !USER CREATE
   const createUser = (e) => {
@@ -302,16 +304,29 @@ const AdminUser = () => {
   };
 
   //! SEARCH STATION BY REGION ID
-  const searchStationByReionId = (e) => {
-    fetch(`${api}/stations/find-by-regionNumber?regionNumber=${e}`, {
-      method: "GET",
-      headers: {
-        "content-type": "application/json",
-        Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => setAllStations(data.data));
+  const searchStationByReionId = async (e) => {
+    const requestStation = await fetch(
+      `${api}/stations/find-by-regionNumber?regionNumber=${e}`,
+      {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          Authorization: "Bearer " + window.localStorage.getItem("accessToken"),
+        },
+      }
+    );
+
+    const responseStation = await requestStation.json();
+
+    let resultStation = [];
+    for (let e of responseStation.data) {
+      const existingStation = allUserStations.find((s) => s._id == e._id);
+
+      if (!existingStation) {
+        resultStation.push(e);
+      }
+    }
+    setAllStations(resultStation);
   };
 
   //! USER ATTACH STATIONS
@@ -754,6 +769,7 @@ const AdminUser = () => {
                   Userga stansiya biriktirish
                 </h1>
                 <button
+                  onClick={() => setCountForRegion(countForRegion + 1)}
                   type="button"
                   className="btn-close btn-close-location"
                   data-bs-dismiss="modal"
