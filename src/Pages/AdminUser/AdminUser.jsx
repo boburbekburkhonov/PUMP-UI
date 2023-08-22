@@ -421,11 +421,19 @@ const AdminUser = () => {
 
         const response = await request.json();
 
-        stationIndexForAttach.forEach((e) => {
-          if (!userStationsIdList.includes(attachStationValue[e].value)) {
-            userStationsIdList.push(attachStationValue[e].value);
-          }
-        });
+        if (allStations.length == 1 && stationIndexForAttach.length == 1) {
+          stationIndexForAttach.forEach((e) => {
+            if (!userStationsIdList.includes(attachStationValue.value)) {
+              userStationsIdList.push(attachStationValue.value);
+            }
+          });
+        } else {
+          stationIndexForAttach.forEach((e) => {
+            if (!userStationsIdList.includes(attachStationValue[e].value)) {
+              userStationsIdList.push(attachStationValue[e].value);
+            }
+          });
+        }
 
         fetch(`${api}/user-join-stations/update`, {
           method: "POST",
@@ -769,7 +777,10 @@ const AdminUser = () => {
                   Userga stansiya biriktirish
                 </h1>
                 <button
-                  onClick={() => setCountForRegion(countForRegion + 1)}
+                  onClick={() => {
+                    setCountForRegion(countForRegion + 1);
+                    setStationIndexForAttach([]);
+                  }}
                   type="button"
                   className="btn-close btn-close-location"
                   data-bs-dismiss="modal"
